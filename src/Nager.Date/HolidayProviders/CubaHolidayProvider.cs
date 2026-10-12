@@ -1,3 +1,4 @@
+using Nager.Date.Extensions;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -91,10 +92,41 @@ namespace Nager.Date.HolidayProviders
                     LocalName = "Navidad",
                     HolidayTypes = HolidayTypes.Public,
                 },
-                this._catholicProvider.GoodFriday("Good Friday", year)
             };
 
+            holidaySpecifications.AddIfNotNull(this.GoodFriday(year));
+            holidaySpecifications.AddIfNotNull(this.NewYearsEve(year));
+
             return holidaySpecifications;
+        }
+
+        private HolidaySpecification? GoodFriday(int year)
+        {
+            //Good Friday is a public holiday since 2012
+            if (year < 2012)
+            {
+                return null;
+            }
+
+            return this._catholicProvider.GoodFriday("Viernes Santo", year);
+        }
+
+        private HolidaySpecification? NewYearsEve(int year)
+        {
+            //31 December and 2 January are public holidays since 2007 (Ley No. 116, Código de Trabajo)
+            if (year < 2007)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "NEWYEARSEVE-01",
+                Date = new DateTime(year, 12, 31),
+                EnglishName = "New Year's Eve",
+                LocalName = "Fin de Año",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         /// <inheritdoc/>
@@ -103,6 +135,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Cuba",
+                "https://www.directoriocubano.info/feriados",
             ];
         }
     }
