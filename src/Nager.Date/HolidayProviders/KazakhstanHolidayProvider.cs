@@ -47,6 +47,14 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
+                    Id = "ORTHODOXCHRISTMAS-01",
+                    Date = new DateTime(year, 1, 7),
+                    EnglishName = "Orthodox Christmas",
+                    LocalName = "Православное Рождество",
+                    HolidayTypes = HolidayTypes.Public,
+                },
+                new HolidaySpecification
+                {
                     Id = "INTERNATIONALWOMENSDAY-01",
                     Date = new DateTime(year, 3, 8),
                     EnglishName = "International Women's Day",
@@ -143,7 +151,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Kazakhstan"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Kazakhstan",
+                "https://www.gov.kz/article/33969?lang=en"
             ];
         }
     }
