@@ -1,3 +1,4 @@
+using Nager.Date.Helpers;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -38,6 +39,7 @@ namespace Nager.Date.HolidayProviders
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
             //var easterSunday = this._catholicProvider.EasterSunday(year);
+            var firstFridayInDecember = DateHelper.FindDay(year, Month.December, DayOfWeek.Friday, Occurrence.First);
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -94,9 +96,9 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "SABAFLAGDAY-01",
-                    Date = new DateTime(year, 12, 6),
-                    EnglishName = "Saba Flag Day",
-                    LocalName = "Vlagdag saba",
+                    Date = firstFridayInDecember,
+                    EnglishName = "Saba Day",
+                    LocalName = "Saba Day",
                     HolidayTypes = HolidayTypes.Public,
                     SubdivisionCodes = ["BQ-SA"],
                 },
@@ -152,6 +154,7 @@ namespace Nager.Date.HolidayProviders
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Bonaire",
                 "https://www.statiagovernment.com/governance/official-public-holidays",
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Saba",
+                "https://www.sabagov.nl/management-organization/office-of-communication-public-relations/public-notices/carnival-monday-august-4th",
             ];
         }
     }
