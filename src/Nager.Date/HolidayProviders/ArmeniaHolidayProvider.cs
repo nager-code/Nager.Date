@@ -49,7 +49,7 @@ namespace Nager.Date.HolidayProviders
                 {
                     Id = "CHRISTMASDAY-01",
                     Date = new DateTime(year, 1, 5),
-                    EnglishName = "Christmas Day",
+                    EnglishName = "Christmas Eve",
                     LocalName = "Սուրբ Ծնունդ",
                     HolidayTypes = HolidayTypes.Public,
                     HolidaySources = HolidaySources.ReligiousHolidays
@@ -144,7 +144,7 @@ namespace Nager.Date.HolidayProviders
                     HolidayTypes = HolidayTypes.Public,
                     HolidaySources = HolidaySources.CulturalHolidays
                 },
-                this._catholicProvider.EasterSunday("Ամանոր", year)
+                this._catholicProvider.EasterSunday("Սուրբ Զատիկ", year)
             };
 
             return holidaySpecifications;
