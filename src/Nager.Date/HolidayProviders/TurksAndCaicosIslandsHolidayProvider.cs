@@ -28,10 +28,22 @@ namespace Nager.Date.HolidayProviders
         {
             var secondMondayInMarch = DateHelper.FindDay(year, Month.March, DayOfWeek.Monday, Occurrence.Second);
             var lastMondayInMay = DateHelper.FindLastDay(year, Month.May, DayOfWeek.Monday);
-            var secondMondayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Monday, Occurrence.Second);
+            var thirdMondayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Monday, Occurrence.Third);
             var lastMondayInAugust = DateHelper.FindLastDay(year, Month.August, DayOfWeek.Monday);
             var lastFridayInSeptember = DateHelper.FindLastDay(year, Month.September, DayOfWeek.Friday);
             var secondMondayInOctober = DateHelper.FindDay(year, Month.October, DayOfWeek.Monday, Occurrence.Second);
+
+            var weekendObservedRuleSet = new ObservedRuleSet
+            {
+                Saturday = date => date.AddDays(2),
+                Sunday = date => date.AddDays(1),
+            };
+
+            var christmasObservedRuleSet = new ObservedRuleSet
+            {
+                Saturday = date => date.AddDays(2),
+                Sunday = date => date.AddDays(2),
+            };
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -62,7 +74,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "KINGSBIRTHDAY-01",
-                    Date = lastMondayInMay,
+                    Date = thirdMondayInJune,
                     EnglishName = "King's Birthday",
                     LocalName = "King's Birthday",
                     HolidayTypes = HolidayTypes.Public,
@@ -74,6 +86,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Emancipation Day",
                     LocalName = "Emancipation Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = weekendObservedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -106,6 +119,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Christmas Day",
                     LocalName = "Christmas Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = christmasObservedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -114,6 +128,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "St. Stephen's Day",
                     LocalName = "Boxing Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = christmasObservedRuleSet,
                 },
                 this._catholicProvider.GoodFriday("Good Friday", year),
                 this._catholicProvider.EasterMonday("Easter Monday", year),
@@ -128,6 +143,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_the_Turks_and_Caicos_Islands",
+                "https://www.visittci.com/life-and-business/government/public-holidays",
             ];
         }
     }
