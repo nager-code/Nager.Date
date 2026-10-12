@@ -25,6 +25,16 @@ namespace Nager.Date.HolidayProviders
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
+            //Ley 139-97, holidays falling on Tuesday or Wednesday are moved to the previous Monday,
+            //holidays falling on Thursday or Friday are moved to the following Monday
+            var law139Of97ObservedRuleSet = new ObservedRuleSet
+            {
+                Tuesday = date => date.AddDays(-1),
+                Wednesday = date => date.AddDays(-2),
+                Thursday = date => date.AddDays(4),
+                Friday = date => date.AddDays(3),
+            };
+
             var holidaySpecifications = new List<HolidaySpecification>
             {
                 new HolidaySpecification
@@ -42,6 +52,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Day of Kings",
                     LocalName = "Día de Reyes",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = law139Of97ObservedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -58,6 +69,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Duarte's Birthday",
                     LocalName = "Día del Natalicio de Juan Pablo Duarte",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = law139Of97ObservedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -74,14 +86,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Labour Day",
                     LocalName = "Día del Trabajador",
                     HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
-                    Id = "MOTHERSDAY-01",
-                    Date = new DateTime(year, 5, 28),
-                    EnglishName = "Mother's Day",
-                    LocalName = "Día de las Madres",
-                    HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = law139Of97ObservedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -106,6 +111,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Constitution Day",
                     LocalName = "Día de la Constitución",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = law139Of97ObservedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -128,6 +134,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_the_Dominican_Republic",
+                "https://presidencia.gob.do/noticias/ministerio-de-trabajo-informa-dias-feriados-correspondientes-al-ano-2026",
             ];
         }
     }
