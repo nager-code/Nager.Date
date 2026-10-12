@@ -86,8 +86,8 @@ namespace Nager.Date.HolidayProviders
                 {
                     Id = "CHRISTMASDAY-02",
                     Date = new DateTime(year, 12, 26),
-                    EnglishName = "Christmas Day",
-                    LocalName = "Christmas Day",
+                    EnglishName = "Boxing Day",
+                    LocalName = "Boxing Day",
                     HolidayTypes = HolidayTypes.Public,
                     ObservedRuleSet = mondayObservedRuleSet,
                 },
