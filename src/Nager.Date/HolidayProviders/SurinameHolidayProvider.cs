@@ -149,6 +149,7 @@ namespace Nager.Date.HolidayProviders
                 },
                 this._catholicProvider.GoodFriday("Good Friday", year),
                 this._catholicProvider.EasterSunday("Easter Sunday", year),
+                this._catholicProvider.EasterMonday("Tweede Paasdag", year),
                 this._catholicProvider.AscensionDay("Ascension Day", year)
             };
 
@@ -185,7 +186,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Suriname#National_holidays"
+                "https://en.wikipedia.org/wiki/Suriname#National_holidays",
+                "https://www.officeholidays.com/countries/suriname"
             ];
         }
     }
