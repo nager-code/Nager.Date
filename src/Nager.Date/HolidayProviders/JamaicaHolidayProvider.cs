@@ -1,3 +1,4 @@
+using Nager.Date.Helpers;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -26,6 +27,7 @@ namespace Nager.Date.HolidayProviders
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
             var easterSunday = this._catholicProvider.EasterSunday(year);
+            var thirdMondayInOctober = DateHelper.FindDay(year, Month.October, DayOfWeek.Monday, Occurrence.Third);
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -44,6 +46,11 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Labour Day",
                     LocalName = "Labour Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = new ObservedRuleSet
+                    {
+                        Saturday = date => date.AddDays(2),
+                        Sunday = date => date.AddDays(1)
+                    }
                 },
                 new HolidaySpecification
                 {
@@ -68,7 +75,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "NATIONALHEROESDAY-01",
-                    Date = new DateTime(year, 10, 16),
+                    Date = thirdMondayInOctober,
                     EnglishName = "National Heroes Day",
                     LocalName = "National Heroes Day",
                     HolidayTypes = HolidayTypes.Public,
