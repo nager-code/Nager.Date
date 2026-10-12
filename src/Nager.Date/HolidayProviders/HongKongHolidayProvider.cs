@@ -141,11 +141,7 @@ namespace Nager.Date.HolidayProviders
                 var followingTheMidAutumnFestivalDay = chineseCalendar.ToDateTime(year, this.MoveMonth(8, leapMonth), 16, 0, 0, 0, 0);
                 var chungYeungFestivalDay = chineseCalendar.ToDateTime(year, this.MoveMonth(9, leapMonth), 9, 0, 0, 0, 0);
 
-                chingMingFestivalDate = new DateTime(year, 4, 5);
-                if (leapMonth != 4)
-                {
-                    chingMingFestivalDate = chingMingFestivalDate.Value.AddDays(-1);
-                }
+                chingMingFestivalDate = this.GetChingMingFestivalDate(year);
 
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -251,6 +247,21 @@ namespace Nager.Date.HolidayProviders
             holidaySpecifications.Add(easterMonday);
 
             return [.. holidaySpecifications];
+        }
+
+        /// <summary>
+        /// Ching Ming Festival is the day of the solar term Qingming (the sun reaches the celestial longitude of 15°)
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        private DateTime GetChingMingFestivalDate(int year)
+        {
+            //Approximation formula for the solar term, valid for the years 1901 - 2100
+            var y = year % 100;
+            var c = year >= 2000 ? 4.81 : 5.59;
+            var day = (int)(y * 0.2422 + c) - (y / 4);
+
+            return new DateTime(year, 4, day);
         }
 
         private int MoveMonth(int month, int leapMonth)
