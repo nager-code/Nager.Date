@@ -26,6 +26,7 @@ namespace Nager.Date.HolidayProviders
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
             var easterSunday = this._catholicProvider.EasterSunday(year);
+            var observedRuleSet = this.GetObservedRuleSet(year);
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -44,6 +45,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "International Workers' Day",
                     LocalName = "International Workers' Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = observedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -52,6 +54,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "The Battle of Pichincha",
                     LocalName = "Batalla de Pichincha",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = observedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -60,6 +63,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Declaration of Independence of Quito",
                     LocalName = "Primer Grito de Independencia",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = observedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -68,6 +72,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Independence of Guayaquil",
                     LocalName = "Independencia de Guayaquil",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = observedRuleSet,
                 },
                 new HolidaySpecification
                 {
@@ -115,12 +120,32 @@ namespace Nager.Date.HolidayProviders
             return holidaySpecifications;
         }
 
+        private ObservedRuleSet? GetObservedRuleSet(int year)
+        {
+            //Ley Orgánica Reformatoria a la Ley Orgánica del Servicio Público y al Código del Trabajo
+            //Registro Oficial Suplemento 906 of 20 December 2016
+            if (year < 2017)
+            {
+                return null;
+            }
+
+            return new ObservedRuleSet
+            {
+                Tuesday = date => date.AddDays(-1),
+                Wednesday = date => date.AddDays(2),
+                Thursday = date => date.AddDays(1),
+                Saturday = date => date.AddDays(-1),
+                Sunday = date => date.AddDays(1),
+            };
+        }
+
         /// <inheritdoc/>
         public override IEnumerable<string> GetSources()
         {
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Ecuador",
+                "https://www.asambleanacional.gob.ec/es/node/47579",
             ];
         }
     }
