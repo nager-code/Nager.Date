@@ -1,3 +1,4 @@
+using Nager.Date.Helpers;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -25,6 +26,13 @@ namespace Nager.Date.HolidayProviders
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
+            var thirdMondayInJanuary = DateHelper.FindDay(year, Month.January, DayOfWeek.Monday, Occurrence.Third);
+            var thirdMondayInFebruary = DateHelper.FindDay(year, Month.February, DayOfWeek.Monday, Occurrence.Third);
+            var lastMondayInMay = DateHelper.FindLastDay(year, Month.May, DayOfWeek.Monday);
+            var firstMondayInSeptember = DateHelper.FindDay(year, Month.September, DayOfWeek.Monday, Occurrence.First);
+            var secondMondayInOctober = DateHelper.FindDay(year, Month.October, DayOfWeek.Monday, Occurrence.Second);
+            var fourthThursdayInNovember = DateHelper.FindDay(year, Month.November, DayOfWeek.Thursday, Occurrence.Fourth);
+
             var holidaySpecifications = new List<HolidaySpecification>
             {
                 new HolidaySpecification
@@ -38,7 +46,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "MARTINLUTHERKINGJRDAY-01",
-                    Date = new DateTime(year, 1, 20),
+                    Date = thirdMondayInJanuary,
                     EnglishName = "Martin Luther King Jr. Day",
                     LocalName = "Martin Luther King Jr. Day",
                     HolidayTypes = HolidayTypes.Public,
@@ -46,7 +54,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "PRESIDENTSDAY-01",
-                    Date = new DateTime(year, 2, 17),
+                    Date = thirdMondayInFebruary,
                     EnglishName = "Presidents' Day",
                     LocalName = "Presidents' Day",
                     HolidayTypes = HolidayTypes.Public,
@@ -62,7 +70,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "MEMORIALDAY-01",
-                    Date = new DateTime(year, 5, 26),
+                    Date = lastMondayInMay,
                     EnglishName = "Memorial Day",
                     LocalName = "Memorial Day",
                     HolidayTypes = HolidayTypes.Public,
@@ -86,7 +94,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "LABOURDAY-01",
-                    Date = new DateTime(year, 9, 1),
+                    Date = firstMondayInSeptember,
                     EnglishName = "Labour Day",
                     LocalName = "Labor Day",
                     HolidayTypes = HolidayTypes.Public,
@@ -94,7 +102,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "COMMONWEALTHCULTURALDAY-01",
-                    Date = new DateTime(year, 10, 13),
+                    Date = secondMondayInOctober,
                     EnglishName = "Commonwealth Cultural Day",
                     LocalName = "Commonwealth Cultural Day",
                     HolidayTypes = HolidayTypes.Public,
@@ -118,7 +126,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "THANKSGIVING-01",
-                    Date = new DateTime(year, 11, 27),
+                    Date = fourthThursdayInNovember,
                     EnglishName = "Thanksgiving",
                     LocalName = "Thanksgiving",
                     HolidayTypes = HolidayTypes.Public,
@@ -151,6 +159,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/2025_in_the_Northern_Mariana_Islands",
+                "https://www.nmid.uscourts.gov/holiday-schedule",
             ];
         }
     }
