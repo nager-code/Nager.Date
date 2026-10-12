@@ -32,7 +32,7 @@ namespace Nager.Date.HolidayProviders
                     Id = "NEWYEARSDAY-01",
                     Date = new DateTime(year, 1, 1),
                     EnglishName = "New Year's Day",
-                    LocalName = "New Year's Day",
+                    LocalName = "Jour de l'an",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -40,7 +40,7 @@ namespace Nager.Date.HolidayProviders
                     Id = "LABOURDAY-01",
                     Date = new DateTime(year, 5, 1),
                     EnglishName = "Labour Day",
-                    LocalName = "Labour Day",
+                    LocalName = "Fête du Travail",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -48,7 +48,7 @@ namespace Nager.Date.HolidayProviders
                     Id = "VICTORYDAY-01",
                     Date = new DateTime(year, 5, 8),
                     EnglishName = "Victory Day",
-                    LocalName = "Victory Day",
+                    LocalName = "Victoire 1945",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -56,7 +56,7 @@ namespace Nager.Date.HolidayProviders
                     Id = "FRENCHNATIONALDAY-01",
                     Date = new DateTime(year, 7, 14),
                     EnglishName = "French National Day",
-                    LocalName = "French National Day",
+                    LocalName = "Fête nationale",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -64,15 +64,15 @@ namespace Nager.Date.HolidayProviders
                     Id = "ASSUMPTIONDAY-01",
                     Date = new DateTime(year, 8, 15),
                     EnglishName = "Assumption Day",
-                    LocalName = "Assumption Day",
+                    LocalName = "Assomption",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
                 {
                     Id = "NEWCALEDONIADAY-01",
                     Date = new DateTime(year, 9, 24),
-                    EnglishName = "New Caledonia Day",
-                    LocalName = "New Caledonia Day",
+                    EnglishName = "Citizenship Day",
+                    LocalName = "Fête de la Citoyenneté",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -80,7 +80,7 @@ namespace Nager.Date.HolidayProviders
                     Id = "ALLSAINTSDAY-01",
                     Date = new DateTime(year, 11, 1),
                     EnglishName = "All Saints' Day",
-                    LocalName = "All Saints' Day",
+                    LocalName = "Toussaint",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -88,7 +88,7 @@ namespace Nager.Date.HolidayProviders
                     Id = "ARMISTICEDAY-01",
                     Date = new DateTime(year, 11, 11),
                     EnglishName = "Armistice Day",
-                    LocalName = "Armistice Day",
+                    LocalName = "Armistice 1918",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -96,20 +96,12 @@ namespace Nager.Date.HolidayProviders
                     Id = "CHRISTMASDAY-01",
                     Date = new DateTime(year, 12, 25),
                     EnglishName = "Christmas Day",
-                    LocalName = "Christmas Day",
+                    LocalName = "Noël",
                     HolidayTypes = HolidayTypes.Public,
                 },
-                new HolidaySpecification
-                {
-                    Id = "NEWYEARSEVE-01",
-                    Date = new DateTime(year, 12, 31),
-                    EnglishName = "New Year's Eve",
-                    LocalName = "New Year's Eve",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                this._catholicProvider.GoodFriday("Good Friday", year),
-                this._catholicProvider.AscensionDay("Ascension Day", year),
-                this._catholicProvider.WhitMonday("Whit Monday", year),
+                this._catholicProvider.EasterMonday("Lundi de Pâques", year),
+                this._catholicProvider.AscensionDay("Ascension", year),
+                this._catholicProvider.WhitMonday("Lundi de Pentecôte", year),
             };
 
             return holidaySpecifications;
@@ -121,6 +113,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_New_Caledonia",
+                "https://lepetitjournal.com/nouvelle-caledonie/jours-feries-vacances-scolaires-nouvelle-caledonie-295527",
             ];
         }
     }
