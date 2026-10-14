@@ -1,3 +1,4 @@
+using Nager.Date.Helpers;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -25,6 +26,9 @@ namespace Nager.Date.HolidayProviders
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
+            //Monday after the first Saturday in June
+            var kingsBirthday = DateHelper.FindDay(year, Month.June, 2, DayOfWeek.Monday);
+
             var holidaySpecifications = new List<HolidaySpecification>
             {
                 new HolidaySpecification
@@ -62,7 +66,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "KINGSBIRTHDAY-01",
-                    Date = new DateTime(year, 6, 6),
+                    Date = kingsBirthday,
                     EnglishName = "King's Birthday",
                     LocalName = "King's Birthday",
                     HolidayTypes = HolidayTypes.Public,
@@ -105,6 +109,8 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_the_Cocos_(Keeling)_Islands",
+                "https://www.infrastructure.gov.au/sites/default/files/documents/community-bulletin-cki-public-holidays-2026.pdf",
+                "https://www.infrastructure.gov.au/sites/default/files/documents/2027-public-holidays-cocos-keeling-islands-a15-2026-24-july-2026-pdf.pdf",
             ];
         }
     }
