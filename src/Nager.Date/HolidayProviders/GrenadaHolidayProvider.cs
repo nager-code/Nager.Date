@@ -27,6 +27,7 @@ namespace Nager.Date.HolidayProviders
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
             var firstMondayInAugust = DateHelper.FindDay(year, Month.August, DayOfWeek.Monday, Occurrence.First);
+            var secondMondayInAugust = DateHelper.FindDay(year, Month.August, DayOfWeek.Monday, Occurrence.Second);
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -73,9 +74,17 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "CARNIVAL-01",
-                    Date = new DateTime(year, 8, 11),
-                    EnglishName = "Carnival",
-                    LocalName = "Carnival",
+                    Date = secondMondayInAugust,
+                    EnglishName = "Carnival Monday",
+                    LocalName = "Carnival Monday",
+                    HolidayTypes = HolidayTypes.Public,
+                },
+                new HolidaySpecification
+                {
+                    Id = "CARNIVAL-02",
+                    Date = secondMondayInAugust.AddDays(1),
+                    EnglishName = "Carnival Tuesday",
+                    LocalName = "Carnival Tuesday",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -117,6 +126,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Grenada",
+                "https://www.officeholidays.com/holidays/grenada/spicemas",
             ];
         }
     }
