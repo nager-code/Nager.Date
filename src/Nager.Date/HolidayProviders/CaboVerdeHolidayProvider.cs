@@ -1,4 +1,5 @@
 using Nager.Date.Models;
+using Nager.Date.ReligiousProviders;
 using System;
 using System.Collections.Generic;
 
@@ -9,16 +10,23 @@ namespace Nager.Date.HolidayProviders
     /// </summary>
     internal sealed class CaboVerdeHolidayProvider : AbstractHolidayProvider
     {
+        private readonly ICatholicProvider _catholicProvider;
+
         /// <summary>
         /// Cabo Verde HolidayProvider
         /// </summary>
-        public CaboVerdeHolidayProvider() : base(CountryCode.CV)
+        /// <param name="catholicProvider"></param>
+        public CaboVerdeHolidayProvider(
+            ICatholicProvider catholicProvider) : base(CountryCode.CV)
         {
+            this._catholicProvider = catholicProvider;
         }
 
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
+            var easterSunday = this._catholicProvider.EasterSunday(year);
+
             var holidaySpecifications = new List<HolidaySpecification>
             {
                 new HolidaySpecification
@@ -92,7 +100,16 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Christmas Day",
                     LocalName = "Natal",
                     HolidayTypes = HolidayTypes.Public,
-                }
+                },
+                new HolidaySpecification
+                {
+                    Id = "ASHWEDNESDAY-01",
+                    Date = easterSunday.AddDays(-46),
+                    EnglishName = "Ash Wednesday",
+                    LocalName = "Quarta-feira de Cinzas",
+                    HolidayTypes = HolidayTypes.Public,
+                },
+                this._catholicProvider.GoodFriday("Sexta-feira Santa", year),
             };
 
             return holidaySpecifications;
@@ -104,6 +121,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Cape_Verde",
+                "https://www.timeanddate.com/holidays/cape-verde/",
             ];
         }
     }
