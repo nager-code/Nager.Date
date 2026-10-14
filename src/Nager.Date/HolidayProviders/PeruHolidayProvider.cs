@@ -1,3 +1,4 @@
+using Nager.Date.Extensions;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -138,7 +139,27 @@ namespace Nager.Date.HolidayProviders
                 this._catholicProvider.EasterSunday("Domingo Santo", year)
             };
 
+            holidaySpecifications.AddIfNotNull(this.FlagDay(year));
+
             return holidaySpecifications;
+        }
+
+        private HolidaySpecification? FlagDay(int year)
+        {
+            //Ley N.° 31788, published on 15 June 2023
+            if (year < 2024)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "FLAGDAY-01",
+                Date = new DateTime(year, 6, 7),
+                EnglishName = "Battle of Arica and Flag Day",
+                LocalName = "Batalla de Arica y Día de la Bandera",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         /// <inheritdoc/>
