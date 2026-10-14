@@ -142,9 +142,9 @@ namespace Nager.Date.HolidayProviders
                 {
                     Id = id,
                     Date = new DateTime(year, 10, 12),
-                    EnglishName = "Pan America Day",
-                    LocalName = "Pan America Day",
-                    HolidayTypes = HolidayTypes.Optional,
+                    EnglishName = "Indigenous Peoples' Resistance Day",
+                    LocalName = "Indigenous Peoples' Resistance Day",
+                    HolidayTypes = HolidayTypes.Public,
                     ObservedRuleSet = observedRuleSet
                 };
             }
@@ -226,6 +226,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Belize",
+                "https://www.pressoffice.gov.bz/wp-content/uploads/2025/11/Nov-6-PR218-25-Public-and-Bank-Holidays-2026.pdf",
                 "https://www.pressoffice.gov.bz/wp-content/uploads/2019/12/Jan-11-Government-of-Belize-Establishes-New-Public-and-Bank-Holidays.pdf",
                 "https://www.pressoffice.gov.bz/wp-content/uploads/2024/10/Oct-21-PR163-24-Public-and-Bank-Holidays-2025.pdf"
             ];
