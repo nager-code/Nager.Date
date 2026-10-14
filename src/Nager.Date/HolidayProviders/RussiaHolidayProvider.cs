@@ -1,3 +1,4 @@
+using Nager.Date.Extensions;
 using Nager.Date.Models;
 using System;
 using System.Collections.Generic;
@@ -127,7 +128,27 @@ namespace Nager.Date.HolidayProviders
                 }
             };
 
+            holidaySpecifications.AddIfNotNull(this.NewYearHoliday8January(year));
+
             return holidaySpecifications;
+        }
+
+        private HolidaySpecification? NewYearHoliday8January(int year)
+        {
+            //Labour Code Article 112, since 2013 the New Year holidays are 1-6 and 8 January
+            if (year < 2013)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "NEWYEARSDAY-08",
+                Date = new DateTime(year, 1, 8),
+                EnglishName = "New Year holiday",
+                LocalName = "Новогодние каникулы",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         /// <inheritdoc/>
@@ -135,7 +156,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Russia"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Russia",
+                "https://www.consultant.ru/document/cons_doc_LAW_34683/"
             ];
         }
     }
