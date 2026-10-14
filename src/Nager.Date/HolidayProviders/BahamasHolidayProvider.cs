@@ -1,3 +1,4 @@
+using Nager.Date.Helpers;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -25,13 +26,20 @@ namespace Nager.Date.HolidayProviders
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
+            var firstFridayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Friday, Occurrence.First);
+            var firstMondayInAugust = DateHelper.FindDay(year, Month.August, DayOfWeek.Monday, Occurrence.First);
+            var secondMondayInOctober = DateHelper.FindDay(year, Month.October, DayOfWeek.Monday, Occurrence.Second);
+
             var observedRuleSet = new ObservedRuleSet
             {
-                Tuesday = date => date.AddDays(-1),
-                Wednesday = date => date.AddDays(2),
-                Thursday = date => date.AddDays(1),
                 Saturday = date => date.AddDays(2),
                 Sunday = date => date.AddDays(1),
+            };
+
+            var christmasObservedRuleSet = new ObservedRuleSet
+            {
+                Saturday = date => date.AddDays(2),
+                Sunday = date => date.AddDays(2),
             };
 
             var holidaySpecifications = new List<HolidaySpecification>
@@ -56,12 +64,11 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
-                    Id = "PERRYCHRISTIEDAY-01",
-                    Date = new DateTime(year, 4, 1),
-                    EnglishName = "Perry Christie Day",
-                    LocalName = "Perry Christie Day",
+                    Id = "LABOURDAY-01",
+                    Date = firstFridayInJune,
+                    EnglishName = "Labour Day",
+                    LocalName = "Randol Fawkes Labour Day",
                     HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = observedRuleSet
                 },
                 new HolidaySpecification
                 {
@@ -70,24 +77,23 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Independence Day",
                     LocalName = "Independence Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = observedRuleSet
                 },
                 new HolidaySpecification
                 {
                     Id = "EMANCIPATIONDAY-01",
-                    Date = new DateTime(year, 8, 5),
+                    Date = firstMondayInAugust,
                     EnglishName = "Emancipation Day",
                     LocalName = "Emancipation Day",
                     HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = observedRuleSet
                 },
                 new HolidaySpecification
                 {
                     Id = "NATIONALHEROESDAY-01",
-                    Date = new DateTime(year, 10, 12),
+                    Date = secondMondayInOctober,
                     EnglishName = "National Heroes' Day",
                     LocalName = "National Heroes' Day",
                     HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = observedRuleSet
                 },
                 new HolidaySpecification
                 {
@@ -96,6 +102,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Christmas Day",
                     LocalName = "Christmas Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = christmasObservedRuleSet
                 },
                 new HolidaySpecification
                 {
@@ -104,10 +111,11 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "St. Stephen's Day",
                     LocalName = "Boxing Day",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = christmasObservedRuleSet
                 },
-                this._catholicProvider.GoodFriday("Good Friday", year, observedRuleSet),
-                this._catholicProvider.EasterMonday("Easter Monday", year, observedRuleSet),
-                this._catholicProvider.WhitMonday("Whit Monday", year, observedRuleSet)
+                this._catholicProvider.GoodFriday("Good Friday", year),
+                this._catholicProvider.EasterMonday("Easter Monday", year),
+                this._catholicProvider.WhitMonday("Whit Monday", year)
             };
 
             return holidaySpecifications;
