@@ -40,6 +40,14 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
+                    Id = "NEWYEARSDAY-02",
+                    Date = new DateTime(year, 1, 2),
+                    EnglishName = "New Year's Holiday",
+                    LocalName = "New Year's Holiday",
+                    HolidayTypes = HolidayTypes.Public,
+                },
+                new HolidaySpecification
+                {
                     Id = "LABOURDAY-01",
                     Date = new DateTime(year, 5, 1),
                     EnglishName = "Labour Day",
@@ -60,6 +68,14 @@ namespace Nager.Date.HolidayProviders
                     Date = thirdMondayInJuly,
                     EnglishName = "Presidents' Day",
                     LocalName = "Presidents' Day",
+                    HolidayTypes = HolidayTypes.Public,
+                },
+                new HolidaySpecification
+                {
+                    Id = "PRESIDENTSDAY-02",
+                    Date = thirdMondayInJuly.AddDays(1),
+                    EnglishName = "Presidents' Day Holiday",
+                    LocalName = "Presidents' Day Holiday",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -95,6 +111,7 @@ namespace Nager.Date.HolidayProviders
                     HolidayTypes = HolidayTypes.Public,
                 },
                 this._catholicProvider.GoodFriday("Good Friday", year),
+                this._catholicProvider.EasterSaturday("Holy Saturday", year),
                 this._catholicProvider.EasterMonday("Easter Monday", year),
                 this._catholicProvider.AscensionDay("Ascension Day", year)
             };
@@ -107,7 +124,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Botswana"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Botswana",
+                "https://gov.bw/public-holidays"
             ];
         }
     }
