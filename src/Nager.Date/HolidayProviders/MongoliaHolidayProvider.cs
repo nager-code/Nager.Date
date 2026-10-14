@@ -45,10 +45,10 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
-                    Id = "NAADAMHOLIDAY-01",
+                    Id = "MOTHERANDCHILDDAY-01",
                     Date = new DateTime(year, 6, 1),
-                    EnglishName = "Naadam Holiday",
-                    LocalName = "Наадам",
+                    EnglishName = "Mother and Child Day",
+                    LocalName = "Эх, хүүхдийн баяр",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
