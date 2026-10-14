@@ -90,6 +90,7 @@ namespace Nager.Date.HolidayProviders
             holidaySpecifications.AddIfNotNull(this.NationalHeroesDay(year));
             holidaySpecifications.AddIfNotNull(this.EmancipationDay(year));
             holidaySpecifications.AddIfNotNull(this.DiscoveryDay(year));
+            holidaySpecifications.AddIfNotNull(this.MonarchBirthday(year));
             holidaySpecifications.AddIfNotNull(this.ConstitutionDay(year));
             holidaySpecifications.AddIfNotNull(this.RemembranceDay(year));
 
@@ -206,12 +207,29 @@ namespace Nager.Date.HolidayProviders
             };
         }
 
+        private HolidaySpecification MonarchBirthday(int year)
+        {
+            //Public Holidays Act, the Monday following the official birthday of the Sovereign in the United Kingdom
+            var thirdMondayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Monday, Occurrence.Third);
+            var name = year >= 2023 ? "King's Birthday" : "Queen's Birthday";
+
+            return new HolidaySpecification
+            {
+                Id = "MONARCHBIRTHDAY-01",
+                Date = thirdMondayInJune,
+                EnglishName = name,
+                LocalName = name,
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
         /// <inheritdoc/>
         public override IEnumerable<string> GetSources()
         {
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_the_Cayman_Islands",
+                "https://gov.ky/public-holidays",
             ];
         }
     }
