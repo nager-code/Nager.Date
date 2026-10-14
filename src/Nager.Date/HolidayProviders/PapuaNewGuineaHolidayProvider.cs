@@ -28,6 +28,8 @@ namespace Nager.Date.HolidayProviders
         {
             var secondMondayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Monday, Occurrence.Second);
 
+            var monarchBirthdayName = year >= 2023 ? "King's Birthday" : "Queen's Birthday";
+
             var holidaySpecifications = new List<HolidaySpecification>
             {
                 new HolidaySpecification
@@ -42,8 +44,8 @@ namespace Nager.Date.HolidayProviders
                 {
                     Id = "QUEENSBIRTHDAY-01",
                     Date = secondMondayInJune,
-                    EnglishName = "Queen's Birthday",
-                    LocalName = "Queen's Birthday",
+                    EnglishName = monarchBirthdayName,
+                    LocalName = monarchBirthdayName,
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
