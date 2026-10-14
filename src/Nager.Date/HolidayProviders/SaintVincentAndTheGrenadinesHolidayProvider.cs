@@ -1,3 +1,4 @@
+using Nager.Date.Helpers;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -25,7 +26,8 @@ namespace Nager.Date.HolidayProviders
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
-            var easterSunday = this._catholicProvider.EasterSunday(year);
+            //Vincy Mas, Carnival Monday is the first Monday on or after 4 July
+            var carnivalMonday = DateHelper.FindDay(year, Month.July, 4, DayOfWeek.Monday);
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -56,7 +58,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "CARNIVAL-01",
-                    Date = easterSunday.AddDays(-48),
+                    Date = carnivalMonday,
                     EnglishName = "Carnival Monday",
                     LocalName = "Carnival Monday",
                     HolidayTypes = HolidayTypes.Public,
@@ -64,7 +66,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "CARNIVAL-02",
-                    Date = easterSunday.AddDays(-47),
+                    Date = carnivalMonday.AddDays(1),
                     EnglishName = "Carnival Tuesday",
                     LocalName = "Carnival Tuesday",
                     HolidayTypes = HolidayTypes.Public,
@@ -72,7 +74,7 @@ namespace Nager.Date.HolidayProviders
                 new HolidaySpecification
                 {
                     Id = "EMANCIPATIONDAY-01",
-                    Date = new DateTime(year, 8, 5),
+                    Date = new DateTime(year, 8, 1),
                     EnglishName = "Emancipation Day",
                     LocalName = "Emancipation Day",
                     HolidayTypes = HolidayTypes.Public,
@@ -115,6 +117,7 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Saint_Vincent_and_the_Grenadines",
+                "https://onenewsstvincent.com/2024/05/16/vincymas-2024-to-be-officially-launched-tomorrow-friday-may-17",
             ];
         }
     }
