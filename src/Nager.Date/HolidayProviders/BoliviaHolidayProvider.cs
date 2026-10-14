@@ -1,3 +1,4 @@
+using Nager.Date.Extensions;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -39,14 +40,6 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
-                    Id = "FEASTVIRGINOFCANDELARIA-01",
-                    Date = new DateTime(year, 2, 2),
-                    EnglishName = "Feast of the Virgin of Candelaria",
-                    LocalName = "Fiesta de la Virgen de Candelaria",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
                     Id = "LABOURDAY-01",
                     Date = new DateTime(year, 5, 1),
                     EnglishName = "Labour Day",
@@ -59,14 +52,6 @@ namespace Nager.Date.HolidayProviders
                     Date = new DateTime(year, 6, 21),
                     EnglishName = "Andean New Year",
                     LocalName = "Año Nuevo Andino",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
-                    Id = "AGRARIANREFORMDAY-01",
-                    Date = new DateTime(year, 8, 2),
-                    EnglishName = "Agrarian Reform Day",
-                    LocalName = "Día de la Revolución Agraria",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -113,7 +98,27 @@ namespace Nager.Date.HolidayProviders
                 this._catholicProvider.CorpusChristi("Corpus Christi", year)
             };
 
+            holidaySpecifications.AddIfNotNull(this.PlurinationalStateFoundationDay(year));
+
             return holidaySpecifications;
+        }
+
+        private HolidaySpecification? PlurinationalStateFoundationDay(int year)
+        {
+            //Decreto Supremo N° 405 of 20 January 2010
+            if (year < 2010)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "PLURINATIONALSTATEFOUNDATIONDAY-01",
+                Date = new DateTime(year, 1, 22),
+                EnglishName = "Plurinational State Foundation Day",
+                LocalName = "Día de la Creación del Estado Plurinacional de Bolivia",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         /// <inheritdoc/>
@@ -121,7 +126,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Bolivia"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Bolivia",
+                "https://ferrere.com/es/novedades/gobierno-central-define-nuevos-feriados-y-traslados-para-la-gestion-2026/"
             ];
         }
     }
