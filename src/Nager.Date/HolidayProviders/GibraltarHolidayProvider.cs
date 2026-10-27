@@ -28,8 +28,10 @@ namespace Nager.Date.HolidayProviders
         {
             var secondMondayInMarch = DateHelper.FindDay(year, Month.March, DayOfWeek.Monday, Occurrence.Second);
             var lastMondayInMay = DateHelper.FindLastDay(year, Month.May, DayOfWeek.Monday);
-            var thirdMondayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Monday, Occurrence.Second);
+            var thirdMondayInJune = DateHelper.FindDay(year, Month.June, DayOfWeek.Monday, Occurrence.Third);
             var lastMondayInAugust = DateHelper.FindLastDay(year, Month.August, DayOfWeek.Monday);
+
+            var monarchBirthdayName = year >= 2023 ? "King's Birthday" : "Queen's Birthday";
 
             var holidaySpecifications = new List<HolidaySpecification>
             {
@@ -77,8 +79,8 @@ namespace Nager.Date.HolidayProviders
                 {
                     Id = "QUEENSBIRTHDAY-01",
                     Date = thirdMondayInJune,
-                    EnglishName = "Queen's Birthday",
-                    LocalName = "Queen's Birthday",
+                    EnglishName = monarchBirthdayName,
+                    LocalName = monarchBirthdayName,
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -125,7 +127,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Gibraltar"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Gibraltar",
+                "https://gibraltarlaws.gov.gi/legislations/bank-and-public-holidays-order-2025-7796/download"
             ];
         }
     }
