@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nager.Date.Models;
 using System;
 using System.Linq;
 
@@ -18,8 +19,12 @@ namespace Nager.Date.UnitTest.Countries
         [TestMethod]
         public void TestMothersDay()
         {
-            Assert.IsFalse(HolidaySystem.IsPublicHoliday(new DateTime(2021, 5, 30), CountryCode.NI));
-            Assert.IsTrue(HolidaySystem.IsPublicHoliday(new DateTime(2022, 5, 30), CountryCode.NI));
+            //Day off for public sector workers only, not a public holiday
+            Assert.IsFalse(HolidaySystem.GetHolidays(2021, CountryCode.NI).Any(o => o.Date == new DateTime(2021, 5, 30)));
+            Assert.IsFalse(HolidaySystem.IsPublicHoliday(new DateTime(2022, 5, 30), CountryCode.NI));
+
+            var mothersDay = HolidaySystem.GetHolidays(2022, CountryCode.NI).Single(o => o.Date == new DateTime(2022, 5, 30));
+            Assert.AreEqual(HolidayTypes.Authorities, mothersDay.HolidayTypes);
         }
 
         [TestMethod]

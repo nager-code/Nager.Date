@@ -89,7 +89,10 @@ namespace Nager.Date.HolidayProviders
             };
 
             holidaySpecifications.AddIfNotNull(this.MothersDay(year));
-            holidaySpecifications.AddRangeIfNotNull(this.HolidaysSince2026(year));
+            holidaySpecifications.AddIfNotNull(this.RubenDarioBirthday(year));
+            holidaySpecifications.AddIfNotNull(this.ReconciliationAndPeaceDay(year));
+            holidaySpecifications.AddIfNotNull(this.SandinoDay(year));
+            holidaySpecifications.AddIfNotNull(this.CarlosFonsecaDay(year));
 
             return holidaySpecifications;
         }
@@ -97,6 +100,7 @@ namespace Nager.Date.HolidayProviders
         private HolidaySpecification? MothersDay(int year)
         {
             //Ley N.º 1118, La Gaceta N.º 92 of 20 May 2022
+            //Day off for public sector workers only (celebrated only governmentally)
             if (year < 2022)
             {
                 return null;
@@ -108,53 +112,80 @@ namespace Nager.Date.HolidayProviders
                 Date = new DateTime(year, 5, 30),
                 EnglishName = "Mother's Day",
                 LocalName = "Día de las Madres",
-                HolidayTypes = HolidayTypes.Public,
+                HolidayTypes = HolidayTypes.Authorities,
             };
         }
 
-        private HolidaySpecification[] HolidaysSince2026(int year)
+        private HolidaySpecification? RubenDarioBirthday(int year)
         {
             //Ley N.º 1272, La Gaceta N.º 11 of 20 January 2026
             if (year < 2026)
             {
-                return [];
+                return null;
             }
 
-            return
-            [
-                new HolidaySpecification
-                {
-                    Id = "RUBENDARIOBIRTHDAY-01",
-                    Date = new DateTime(year, 1, 18),
-                    EnglishName = "Birthday of Rubén Darío",
-                    LocalName = "Natalicio de Rubén Darío",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
-                    Id = "RECONCILIATIONANDPEACEDAY-01",
-                    Date = new DateTime(year, 2, 2),
-                    EnglishName = "National Day of Reconciliation and Peace",
-                    LocalName = "Día Nacional de la Reconciliación y la Paz",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
-                    Id = "SANDINODAY-01",
-                    Date = new DateTime(year, 2, 21),
-                    EnglishName = "Anniversary of the Death of Augusto C. Sandino",
-                    LocalName = "Paso a la Inmortalidad del General Augusto C. Sandino",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
-                    Id = "CARLOSFONSECADAY-01",
-                    Date = new DateTime(year, 11, 8),
-                    EnglishName = "Anniversary of the Death of Carlos Fonseca",
-                    LocalName = "Paso a la Inmortalidad del Comandante Carlos Fonseca Amador",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-            ];
+            return new HolidaySpecification
+            {
+                Id = "RUBENDARIOBIRTHDAY-01",
+                Date = new DateTime(year, 1, 18),
+                EnglishName = "Birthday of Rubén Darío",
+                LocalName = "Natalicio de Rubén Darío",
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification? ReconciliationAndPeaceDay(int year)
+        {
+            //Ley N.º 1272, La Gaceta N.º 11 of 20 January 2026
+            if (year < 2026)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "RECONCILIATIONANDPEACEDAY-01",
+                Date = new DateTime(year, 2, 2),
+                EnglishName = "National Day of Reconciliation and Peace",
+                LocalName = "Día Nacional de la Reconciliación y la Paz",
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification? SandinoDay(int year)
+        {
+            //Ley N.º 1272, La Gaceta N.º 11 of 20 January 2026
+            if (year < 2026)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "SANDINODAY-01",
+                Date = new DateTime(year, 2, 21),
+                EnglishName = "Anniversary of the Death of Augusto C. Sandino",
+                LocalName = "Paso a la Inmortalidad del General Augusto C. Sandino",
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification? CarlosFonsecaDay(int year)
+        {
+            //Ley N.º 1272, La Gaceta N.º 11 of 20 January 2026
+            if (year < 2026)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "CARLOSFONSECADAY-01",
+                Date = new DateTime(year, 11, 8),
+                EnglishName = "Anniversary of the Death of Carlos Fonseca",
+                LocalName = "Paso a la Inmortalidad del Comandante Carlos Fonseca Amador",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         /// <inheritdoc/>
