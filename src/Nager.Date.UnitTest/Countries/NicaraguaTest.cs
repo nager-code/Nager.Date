@@ -37,7 +37,8 @@ namespace Nager.Date.UnitTest.Countries
                 Assert.IsFalse(HolidaySystem.IsPublicHoliday(date.AddYears(-1), CountryCode.NI));
             }
 
-            Assert.AreEqual(14, HolidaySystem.GetHolidays(2026, CountryCode.NI).Count());
+            //14 holidays according to Ley 1272, Mother's Day counts only for the public sector
+            Assert.AreEqual(13, HolidaySystem.GetHolidays(2026, CountryCode.NI).Count(o => o.HolidayTypes.HasFlag(HolidayTypes.Public)));
         }
 
         [TestMethod]

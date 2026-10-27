@@ -38,11 +38,27 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
+                    Id = "AIRFORCEDAY-01",
+                    Date = new DateTime(year, 2, 1),
+                    EnglishName = "Air Force Day",
+                    LocalName = "Día de la Fuerza Aérea",
+                    HolidayTypes = HolidayTypes.Authorities,
+                },
+                new HolidaySpecification
+                {
                     Id = "LABOURDAY-01",
                     Date = new DateTime(year, 5, 1),
                     EnglishName = "Labour Day",
                     LocalName = "Día Internacional de los Trabajadores",
                     HolidayTypes = HolidayTypes.Public,
+                },
+                new HolidaySpecification
+                {
+                    Id = "ARMYDAY-01",
+                    Date = new DateTime(year, 5, 27),
+                    EnglishName = "Army Day",
+                    LocalName = "Día del Ejército",
+                    HolidayTypes = HolidayTypes.Authorities,
                 },
                 new HolidaySpecification
                 {
@@ -70,6 +86,14 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
+                    Id = "INDIGENOUSRESISTANCEDAY-01",
+                    Date = new DateTime(year, 10, 12),
+                    EnglishName = "Indigenous Resistance Day",
+                    LocalName = "Día de la Resistencia Indígena",
+                    HolidayTypes = HolidayTypes.Observance,
+                },
+                new HolidaySpecification
+                {
                     Id = "IMMACULATECONCEPTION-01",
                     Date = new DateTime(year, 12, 8),
                     EnglishName = "Immaculate Conception",
@@ -83,6 +107,14 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Christmas Day",
                     LocalName = "Navidad",
                     HolidayTypes = HolidayTypes.Public,
+                },
+                new HolidaySpecification
+                {
+                    Id = "NEWYEARSEVE-01",
+                    Date = new DateTime(year, 12, 31),
+                    EnglishName = "New Year's Eve",
+                    LocalName = "Fin de Año",
+                    HolidayTypes = HolidayTypes.Observance,
                 },
                 this._catholicProvider.MaundyThursday("Jueves Santo", year),
                 this._catholicProvider.GoodFriday("Viernes Santo", year),
@@ -193,8 +225,13 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
+                // A Wikipedia article providing a comprehensive overview of public holidays in Nicaragua, including national mandatory holidays, regional traditions, and historical context.
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Nicaragua",
+
+                // A news article from Revista Estrategia & Negocios reporting on the National Assembly's approval of new national holidays, bringing the country's total to 14 official public holidays.
                 "https://www.revistaeyn.com/centroamericaymundo/nicaragua-con-mas-descansos-en-el-ano-14-feriados-NE28979444",
+
+                // A Bloomberg Línea article explaining the Ministry of Labor (MITRAB) guidelines regarding mandatory pay, overtime rules, and employee rest for the July 19th Revolutionary Day public holiday in Nicaragua.
                 "https://www.bloomberglinea.com/2025/07/17/esto-dice-mitrab-sobre-el-pago-del-feriado-del-19-de-julio-en-nicaragua/"
             ];
         }
