@@ -120,7 +120,7 @@ namespace Nager.Date.HolidayProviders
                 this._catholicProvider.GoodFriday("Viernes Santo", year),
             };
 
-            holidaySpecifications.AddIfNotNull(this.MothersDay(year));
+            holidaySpecifications.Add(this.MothersDay(year));
             holidaySpecifications.AddIfNotNull(this.RubenDarioBirthday(year));
             holidaySpecifications.AddIfNotNull(this.ReconciliationAndPeaceDay(year));
             holidaySpecifications.AddIfNotNull(this.SandinoDay(year));
@@ -129,14 +129,13 @@ namespace Nager.Date.HolidayProviders
             return holidaySpecifications;
         }
 
-        private HolidaySpecification? MothersDay(int year)
+        private HolidaySpecification MothersDay(int year)
         {
-            //Ley N.º 1118, La Gaceta N.º 92 of 20 May 2022
-            //Day off for public sector workers only (celebrated only governmentally)
-            if (year < 2022)
-            {
-                return null;
-            }
+            //Before 2022 the government only granted a day off for the public sector by decree
+            //Since Ley N.º 1118 (La Gaceta N.º 92 of 20 May 2022) it is a mandatory national holiday (Código del Trabajo, Art. 66)
+            var holidayTypes = year < 2022
+                ? HolidayTypes.Authorities
+                : HolidayTypes.Public;
 
             return new HolidaySpecification
             {
@@ -144,7 +143,7 @@ namespace Nager.Date.HolidayProviders
                 Date = new DateTime(year, 5, 30),
                 EnglishName = "Mother's Day",
                 LocalName = "Día de las Madres",
-                HolidayTypes = HolidayTypes.Authorities,
+                HolidayTypes = holidayTypes,
             };
         }
 
@@ -227,6 +226,12 @@ namespace Nager.Date.HolidayProviders
             [
                 // A Wikipedia article providing a comprehensive overview of public holidays in Nicaragua, including national mandatory holidays, regional traditions, and historical context.
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Nicaragua",
+
+                // Código del Trabajo (Ley N.º 185), article 66 lists the mandatory national holidays
+                "http://legislacion.asamblea.gob.ni/normaweb.nsf/b92aaea87dac762406257265005d21f7/07c6f8bf13894a66062572d10057bf0c?OpenDocument=",
+
+                // Ley N.º 1118 declares Mother's Day (30 May) a mandatory national holiday
+                "http://legislacion.asamblea.gob.ni/normaweb.nsf/($All)/3B28EC51ABE2787706258848005ADBB0?OpenDocument=",
 
                 // A news article from Revista Estrategia & Negocios reporting on the National Assembly's approval of new national holidays, bringing the country's total to 14 official public holidays.
                 "https://www.revistaeyn.com/centroamericaymundo/nicaragua-con-mas-descansos-en-el-ano-14-feriados-NE28979444",
