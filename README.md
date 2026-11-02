@@ -16,7 +16,7 @@ Nager.Date provides the **days on which normal working life is interrupted** —
 - planning deliveries, logistics and supply chains
 - staff scheduling, absence planning and time recording
 
-Nager.Date is **not** a collection of commemorative, cultural, professional or international days. Keeping the dataset focused keeps it reliable: every entry has to be maintained, verified and kept correct for every year, and every additional day that has no effect on working life makes the data noisier for the people who use it to automate their business.
+Nager.Date is **not** meant to be a complete calendar of commemorative, cultural, professional or international days. Keeping the dataset focused keeps it reliable: every entry has to be maintained and verified for every year, and too many days without an effect on working life make the data noisier for the people who use it to automate their business.
 
 ### Inclusion criteria
 
@@ -30,18 +30,26 @@ A day is included if **at least one** of the following applies:
 | Schools are closed (school holidays) — parents often take leave and are missing at work            | `School`      |
 | Not statutory, but most businesses close or most employees take the day off in practice           | `Optional`    |
 
-**Rule of thumb:** *Does a company have to change how it operates on this day?* If the answer is no, the day does not belong in Nager.Date.
+**Rule of thumb:** *Does a company have to change how it operates on this day?*
 
-### Not included
+### Observances
 
-- Commemorative and memorial days without a day off (e.g. anniversaries of parties, armed forces, battles, revolutions)
-- Professional and awareness days (e.g. Teachers' Day, Physicians' Day, Book Day)
-- International days (e.g. International Women's Day, International Children's Day) — **unless** they are a statutory day off in that country
-- Commercial days (e.g. Mother's Day, Valentine's Day, Black Friday)
-- Religious feast days that are not a day off
+Days without a day off can be added as `Observance`, but only **selectively**. An observance should:
+
+- be officially established in the country (law, decree or government), not only by an association or organization
+- be widely known and noticeable in everyday life of the country (e.g. Mother's Day for retail)
+- have a meaning for the country itself, not only be an international or UN day
+
+The holidays with an effect on working life must remain the core of every country. As a guideline, a country should **not have more observances than public holidays**.
+
+The following days are usually **not accepted**:
+
+- Professional and awareness days (e.g. Teachers' Day, Physicians' Day, Police Day, Book Day)
+- Anniversaries of organizations, parties or armed forces
+- Long lists of commemorative and remembrance days
 - Holidays of cities or regions below the first subdivision level (see [Data precision](#data-precision))
 
-Pull requests that add such days will be closed. Please open an issue first if you are unsure whether a day qualifies.
+Please open an issue first if you are unsure whether a day qualifies.
 
 ## How can I use it?
 
@@ -292,7 +300,7 @@ What variants of holidays are supported by `Nager.Date`
 | School      | School holiday, schools are closed          |
 | Authorities | Authorities are closed                      |
 | Optional    | Majority of people take a day off           |
-| Observance  | No day off, but a direct impact on business operations (e.g. shops close early). Only in exceptional cases, see [Project Scope](#project-scope) |
+| Observance  | No day off, selected days only, see [Observances](#observances) |
 
 ## Special Date Types (Dynamic & Unconfirmed Dates)
 
