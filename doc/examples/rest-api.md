@@ -8,6 +8,10 @@ You can also generate a client for your programming language with the [OpenAPI G
 > API v3 reaches its end of life on **2027-01-31**. Please migrate to v4.
 > In v4 the country code comes **before** the year: `/api/v4/Holidays/{countryCode}/{year}`
 
+> [!TIP]
+> The [Docker container](https://hub.docker.com/r/nager/nager-date) provides the same REST API on your own infrastructure.
+> All examples work unchanged, just replace `https://nagerholidays.com` with the address of your container, e.g. `http://localhost`.
+
 ## Endpoint
 
 ```

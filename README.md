@@ -53,11 +53,13 @@ Please open an issue first if you are unsure whether a day qualifies.
 
 ## How can I use it?
 
-| Variant                                                        | Internet required | License key | Examples                                                   |
-| -------------------------------------------------------------- | ----------------- | ----------- | ---------------------------------------------------------- |
-| [REST API](https://nagerholidays.com/api)                      | Yes               | No          | [REST API examples](doc/examples/rest-api.md)              |
-| [NuGet package Nager.Date](https://www.nuget.org/packages/Nager.Date) | No         | Yes         | [Offline examples](doc/examples/offline-nuget.md)          |
-| [Docker container](https://hub.docker.com/r/nager/nager-date)  | No                | Yes         | [Docker](#docker)                                          |
+| Variant                                                               | Hosting           | Internet required | License key | Examples                                          |
+| --------------------------------------------------------------------- | ----------------- | ----------------- | ----------- | ------------------------------------------------- |
+| [REST API](https://nagerholidays.com/api)                             | nagerholidays.com | Yes               | No          | [REST API examples](doc/examples/rest-api.md)     |
+| [Docker container](https://hub.docker.com/r/nager/nager-date)         | Self-hosted       | No                | Yes         | [REST API examples](doc/examples/rest-api.md)     |
+| [NuGet package Nager.Date](https://www.nuget.org/packages/Nager.Date) | In your .NET app  | No                | Yes         | [Offline examples](doc/examples/offline-nuget.md) |
+
+The Docker container provides **the same REST API** as nagerholidays.com, but runs on your own infrastructure. Existing integrations only need a different base URL.
 
 ### REST API
 
@@ -91,10 +93,16 @@ More examples: [doc/examples/offline-nuget.md](doc/examples/offline-nuget.md)
 
 ### Docker
 
-The Docker container is available via [Docker Hub](https://hub.docker.com/r/nager/nager-date). To run a local instance:
+The Docker container is available via [Docker Hub](https://hub.docker.com/r/nager/nager-date). It provides the same REST API as nagerholidays.com, operated on your own infrastructure without a dependency on our servers.
 
 ```bash
 docker run -p 80:8080 nager/nager-date
+```
+
+All [REST API examples](doc/examples/rest-api.md) work unchanged, only the base URL changes:
+
+```bash
+curl http://localhost/api/v4/Holidays/US/2026
 ```
 
 
