@@ -86,7 +86,13 @@ namespace Nager.Date.UnitTest.Countries
         }
 
         [TestMethod]
+        [DataRow(2021, 2021, 6, 14)]
+        [DataRow(2022, 2022, 6, 13)]
+        [DataRow(2023, 2023, 6, 12)]
+        [DataRow(2024, 2024, 6, 10)]
+        [DataRow(2025, 2025, 6, 16)]
         [DataRow(2026, 2026, 6, 15)]
+        [DataRow(2027, 2027, 6, 14)]
         public void TestKingsBirthday(int year, int observedYear, int month, int day)
         {
             this.AssertObservedDate(year, "QUEENSBIRTHDAY-01", observedYear, month, day);
@@ -155,7 +161,13 @@ namespace Nager.Date.UnitTest.Countries
         }
 
         [TestMethod]
+        [DataRow(2021, 2021, 6, 12)]
+        [DataRow(2022, 2022, 6, 11)]
+        [DataRow(2023, 2023, 6, 10)]
+        [DataRow(2024, 2024, 6, 8)]
+        [DataRow(2025, 2025, 6, 14)]
         [DataRow(2026, 2026, 6, 13)]
+        [DataRow(2027, 2027, 6, 12)]
         public void TestKingsBirthdayDate(int year, int dateYear, int month, int day)
         {
             var holidays = HolidaySystem.GetHolidays(year, CountryCode.MS);
