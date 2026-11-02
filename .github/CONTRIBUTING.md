@@ -2,6 +2,10 @@
 
 Thank you for considering contributing to Nager.Date! Please follow these guidelines to ensure a smooth integration of your changes.
 
+## Before you start: Project Scope
+
+Nager.Date only contains days that interrupt normal working life (public holidays, bank holidays, closures of authorities and school holidays). Commemorative, professional, international or commercial days without a day off are **not** accepted. Please read the [Project Scope](../README.md#project-scope) before adding a holiday.
+
 ## Adding a New Country
 
 To add support for a new country, create a new provider class in the following directory: `src/Nager.Date/HolidayProviders`
@@ -83,6 +87,7 @@ Every new provider must include reliable sources to verify the dates.
 
 - **Priority**: Official government websites or national laws.
 - **Fallback**: Wikipedia is acceptable if no official source is available.
+- The source must show that the day is a **day off** (or that banks, authorities or schools are closed), not just that the day exists.
 
 ### Implementation Example
 Use the following template for a new country provider:

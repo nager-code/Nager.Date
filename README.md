@@ -8,6 +8,41 @@ You can find an overview of the supported countries [here](https://nagerholidays
 
 Need offline access to our functionality? No problem! We also provide solutions that allow you to use our services on your own infrastructure without an internet connection. Easily integrate our service into your system with the [Docker](https://hub.docker.com/r/nager/nager-date) container or the [NuGet](https://www.nuget.org/packages/Nager.Date) package. Both options require a license key. As a [sponsor of nager](https://github.com/sponsors/nager), you get a license key.
 
+## Project Scope
+
+Nager.Date provides the **days on which normal working life is interrupted** — public holidays, bank holidays, closures of authorities and school holidays. The data is meant to drive automated business decisions, for example:
+
+- switching a telephone system to holiday mode / enabling the answering machine
+- planning deliveries, logistics and supply chains
+- staff scheduling, absence planning and time recording
+
+Nager.Date is **not** a collection of commemorative, cultural, professional or international days. Keeping the dataset focused keeps it reliable: every entry has to be maintained, verified and kept correct for every year, and every additional day that has no effect on working life makes the data noisier for the people who use it to automate their business.
+
+### Inclusion criteria
+
+A day is included if **at least one** of the following applies:
+
+| Criterion                                                                                          | Holiday type  |
+| -------------------------------------------------------------------------------------------------- | ------------- |
+| Statutory day off by law or decree for the whole country or a first-level subdivision (ISO 3166-2) | `Public`      |
+| Banks and financial institutions are closed                                                        | `Bank`        |
+| Public authorities are closed                                                                      | `Authorities` |
+| Schools are closed (school holidays) — parents often take leave and are missing at work            | `School`      |
+| Not statutory, but most businesses close or most employees take the day off in practice           | `Optional`    |
+
+**Rule of thumb:** *Does a company have to change how it operates on this day?* If the answer is no, the day does not belong in Nager.Date.
+
+### Not included
+
+- Commemorative and memorial days without a day off (e.g. anniversaries of parties, armed forces, battles, revolutions)
+- Professional and awareness days (e.g. Teachers' Day, Physicians' Day, Book Day)
+- International days (e.g. International Women's Day, International Children's Day) — **unless** they are a statutory day off in that country
+- Commercial days (e.g. Mother's Day, Valentine's Day, Black Friday)
+- Religious feast days that are not a day off
+- Holidays of cities or regions below the first subdivision level (see [Data precision](#data-precision))
+
+Pull requests that add such days will be closed. Please open an issue first if you are unsure whether a day qualifies.
+
 ## How can I use it?
 
 Easily generate a client in your preferred programming language by utilizing our [API documentation](https://nagerholidays.com/scalar/#community-api-v4), which provides a complete overview of all available endpoints. For more details on client generation, refer to the [OpenAPI Generator documentation](https://openapi-generator.tech).
@@ -257,7 +292,7 @@ What variants of holidays are supported by `Nager.Date`
 | School      | School holiday, schools are closed          |
 | Authorities | Authorities are closed                      |
 | Optional    | Majority of people take a day off           |
-| Observance  | Optional festivity, no paid day off         |
+| Observance  | No day off, but a direct impact on business operations (e.g. shops close early). Only in exceptional cases, see [Project Scope](#project-scope) |
 
 ## Special Date Types (Dynamic & Unconfirmed Dates)
 
@@ -312,7 +347,7 @@ There are several business fields in which it is important to know the holidays 
 
 - **E-commerce**: If an online retailer sells its products in different countries, it should know the holidays in these countries to adjust delivery times and customer service accordingly.
 - **Travel industry:** A tour operator should know the holidays of the countries to which it offers trips, to alert its customers to special events or closed attractions.
-- **Staff scheduling:** Companies with branches in several countries must know the holidays in each country to be able to plan their staff needs accordingly.
+- **Staff scheduling:** Companies with branches in several countries must know the holidays in each country to be able to plan their staff needs accordingly. School holidays matter as well, because many parents take leave during these periods.
 - **Financial industry:** Banks and financial institutions should know the holidays in the countries in which they conduct business to ensure that transfers and transactions are performed on time and to estimate the impact of holidays on the foreign exchange market.
 - **Logistics and supply chains:** Companies managing logistics or supply chains across several countries, must know the holidays in these countries to adjust planning and supply chain decisions.
 - **Telephone systems:** To automatically turn on the answering machine on holidays.
