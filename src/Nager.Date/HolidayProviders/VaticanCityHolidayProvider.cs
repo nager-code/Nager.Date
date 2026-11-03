@@ -1,3 +1,4 @@
+using Nager.Date.Extensions;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
 using System;
@@ -53,26 +54,10 @@ namespace Nager.Date.HolidayProviders
                 },
                 new HolidaySpecification
                 {
-                    Id = "ANNIVERSARYOFTHEELECTION-01",
-                    Date = new DateTime(year, 3, 13),
-                    EnglishName = "Anniversary of the election of Pope Francis",
-                    LocalName = "Anniversario dell'Elezione del Santo Padre",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
                     Id = "SAINTJOSEPHSDAY-01",
                     Date = new DateTime(year, 3, 19),
                     EnglishName = "Saint Joseph's Day",
                     LocalName = "San Giuseppe",
-                    HolidayTypes = HolidayTypes.Public,
-                },
-                new HolidaySpecification
-                {
-                    Id = "SAINTGEORGE-01",
-                    Date = new DateTime(year, 4, 23),
-                    EnglishName = "Saint George",
-                    LocalName = "Onomastico del Santo Padre",
                     HolidayTypes = HolidayTypes.Public,
                 },
                 new HolidaySpecification
@@ -142,7 +127,61 @@ namespace Nager.Date.HolidayProviders
                 this._catholicProvider.EasterMonday("Lunedì dell'Angelo", year)
             };
 
+            holidaySpecifications.AddIfNotNull(this.AnniversaryOfTheElectionOfThePope(year));
+            holidaySpecifications.AddIfNotNull(this.NameDayOfThePope(year));
+
             return holidaySpecifications;
+        }
+
+        private HolidaySpecification AnniversaryOfTheElectionOfThePope(int year)
+        {
+            if (year >= 2026)
+            {
+                //Pope Leo XIV was elected on 8 May 2025
+                return new HolidaySpecification
+                {
+                    Id = "ANNIVERSARYOFTHEELECTION-01",
+                    Date = new DateTime(year, 5, 8),
+                    EnglishName = "Anniversary of the election of Pope Leo XIV",
+                    LocalName = "Anniversario dell'Elezione del Santo Padre",
+                    HolidayTypes = HolidayTypes.Public,
+                };
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "ANNIVERSARYOFTHEELECTION-01",
+                Date = new DateTime(year, 3, 13),
+                EnglishName = "Anniversary of the election of Pope Francis",
+                LocalName = "Anniversario dell'Elezione del Santo Padre",
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification NameDayOfThePope(int year)
+        {
+            if (year >= 2025)
+            {
+                //Name day of Pope Leo XIV (Robert Francis Prevost), Saint Robert Bellarmine
+                return new HolidaySpecification
+                {
+                    Id = "SAINTROBERTBELLARMINE-01",
+                    Date = new DateTime(year, 9, 17),
+                    EnglishName = "Saint Robert Bellarmine",
+                    LocalName = "Onomastico del Santo Padre",
+                    HolidayTypes = HolidayTypes.Public,
+                };
+            }
+
+            //Name day of Pope Francis (Jorge Mario Bergoglio), Saint George
+            return new HolidaySpecification
+            {
+                Id = "SAINTGEORGE-01",
+                Date = new DateTime(year, 4, 23),
+                EnglishName = "Saint George",
+                LocalName = "Onomastico del Santo Padre",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         /// <inheritdoc/>
@@ -150,7 +189,8 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Vatican_City"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Vatican_City",
+                "https://www.vaticannews.va/de/vatikan/news/2025-09/heiliger-jesuit-robert-bellarmin-namenspatron-papst-leo-xiv.html"
             ];
         }
     }
