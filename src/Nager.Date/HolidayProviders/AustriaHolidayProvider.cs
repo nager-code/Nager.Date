@@ -130,8 +130,48 @@ namespace Nager.Date.HolidayProviders
             holidaySpecifications.AddIfNotNull(this.SaintRupertsDay(year));
             holidaySpecifications.AddIfNotNull(this.SaintMartinsDay(year));
             holidaySpecifications.AddIfNotNull(this.SaintLeopoldsDay(year));
+            holidaySpecifications.AddIfNotNull(this.AllSoulsDay(year));
+            holidaySpecifications.AddIfNotNull(this.ChristmasEve(year));
 
             return holidaySpecifications;
+        }
+
+        private HolidaySpecification? AllSoulsDay(int year)
+        {
+            //All Souls' Day is a school-free day in all federal states (Schulzeitgesetz 1985 § 2, "der Allerseelentag").
+            //Earliest version verified in RIS is valid from 12.06.1991; earlier years are not verified.
+            if (year < 1991)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "ALLSOULSDAY-01",
+                Date = new DateTime(year, 11, 2),
+                EnglishName = "All Souls' Day",
+                LocalName = "Allerseelen",
+                HolidayTypes = HolidayTypes.School
+            };
+        }
+
+        private HolidaySpecification? ChristmasEve(int year)
+        {
+            //Oesterreichische Nationalbank: December 24 is a holiday for banks.
+            //Verified for 2026 only; earlier years are not verified.
+            if (year < 2026)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "CHRISTMASEVE-01",
+                Date = new DateTime(year, 12, 24),
+                EnglishName = "Christmas Eve",
+                LocalName = "Heiliger Abend",
+                HolidayTypes = HolidayTypes.Bank
+            };
         }
 
         private HolidaySpecification SaintJosephsDay(int year)
@@ -204,7 +244,11 @@ namespace Nager.Date.HolidayProviders
         {
             return
             [
-                "https://en.wikipedia.org/wiki/Public_holidays_in_Austria"
+                "https://en.wikipedia.org/wiki/Public_holidays_in_Austria",
+                "https://www.bmb.gv.at/Themen/schule/schulpraxis/termine/feiertage.html", //2026, school-free days and patron saints
+                "https://www.ris.bka.gv.at/eli/bgbl/1985/77/P2/NOR12121548", //Schulzeitgesetz 1985 § 2, version 1991-1993
+                "https://oenb.at/en/Services/Bank-Holidays.html", //2026, bank holidays
+                "https://www.ogh.gv.at/entscheidungen/entscheidungen-ogh/feiertagsentgelt-fuer-arbeit-am-karfreitag/", //Good Friday rule until 2019
             ];
         }
     }
