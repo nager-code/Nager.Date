@@ -10,7 +10,7 @@ namespace Nager.Date.HolidayProviders
     /// <summary>
     /// Mexico HolidayProvider
     /// </summary>
-    internal sealed class MexicoHolidayProvider : AbstractHolidayProvider
+    internal sealed class MexicoHolidayProvider : AbstractHolidayProvider, IObservedRuleSetHolidayProvider
     {
         private readonly ICatholicProvider _catholicProvider;
 

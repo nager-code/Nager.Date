@@ -11,7 +11,7 @@ namespace Nager.Date.HolidayProviders
     /// <summary>
     /// New Zealand HolidayProvider
     /// </summary>
-    internal sealed class NewZealandHolidayProvider : AbstractHolidayProvider, ISubdivisionCodesProvider
+    internal sealed class NewZealandHolidayProvider : AbstractHolidayProvider, ISubdivisionCodesProvider, IObservedRuleSetHolidayProvider
     {
         private readonly ICatholicProvider _catholicProvider;
         private readonly Dictionary<int, DateTime> _matariki;

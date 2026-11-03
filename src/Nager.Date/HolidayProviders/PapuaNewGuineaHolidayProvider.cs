@@ -9,7 +9,7 @@ namespace Nager.Date.HolidayProviders
     /// <summary>
     /// Papua New Guinea HolidayProvider
     /// </summary>
-    internal sealed class PapuaNewGuineaHolidayProvider : AbstractHolidayProvider
+    internal sealed class PapuaNewGuineaHolidayProvider : AbstractHolidayProvider, IObservedRuleSetHolidayProvider
     {
         private readonly ICatholicProvider _catholicProvider;
 

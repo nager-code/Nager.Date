@@ -9,7 +9,7 @@ namespace Nager.Date.HolidayProviders
     /// <summary>
     /// Micronesia HolidayProvider
     /// </summary>
-    internal sealed class MicronesiaHolidayProvider : AbstractHolidayProvider, ISubdivisionCodesProvider
+    internal sealed class MicronesiaHolidayProvider : AbstractHolidayProvider, ISubdivisionCodesProvider, IObservedRuleSetHolidayProvider
     {
         private readonly ICatholicProvider _catholicProvider;
 
