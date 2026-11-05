@@ -7,7 +7,7 @@ using System.Linq;
 namespace Nager.Date.UnitTest.Countries
 {
     [TestClass]
-    public class GermanyTest
+    public class GermanyTest() : BaseTest(CountryCode.DE)
     {
         [TestMethod]
         public void TestGermanyCorpusChristi()
@@ -130,6 +130,49 @@ namespace Nager.Date.UnitTest.Countries
         {
             var isHoliday = HolidaySystem.IsPublicHoliday(new DateTime(year, 10, 3), CountryCode.DE);
             Assert.AreEqual(expectedIsHoliday, isHoliday);
+        }
+
+        [TestMethod]
+        [DataRow(1954)]
+        [DataRow(1963)]
+        [DataRow(1980)]
+        [DataRow(1989)]
+        [DataRow(1990)]
+        public void TestGermanUnityDayJune17(int year)
+        {
+            //Gesetz über den Tag der deutschen Einheit of 4 August 1953 (BGBl. I S. 778), repealed by the Unification Treaty 1990
+            this.AssertObservedDate(year, "GERMANUNITYDAYJUNE17-01", year, 6, 17);
+
+            var isHoliday = HolidaySystem.IsPublicHoliday(new DateTime(year, 6, 17), CountryCode.DE);
+            Assert.IsTrue(isHoliday);
+        }
+
+        [TestMethod]
+        [DataRow(1953)]
+        [DataRow(1991)]
+        [DataRow(2024)]
+        [DataRow(2028)]
+        public void TestGermanUnityDayJune17NotOutside1954To1990(int year)
+        {
+            this.AssertNoHoliday(year, "GERMANUNITYDAYJUNE17-01");
+        }
+
+        [TestMethod]
+        public void TestGermanUnityDayBothDatesIn1990()
+        {
+            //1990 is the only year with both: 17 June (Federal Republic, until reunification) and 3 October (Unification Treaty)
+            this.AssertObservedDate(1990, "GERMANUNITYDAYJUNE17-01", 1990, 6, 17);
+            this.AssertObservedDate(1990, "GERMANUNITYDAY-01", 1990, 10, 3);
+        }
+
+        [TestMethod]
+        public void TestBerlinUprisingOfJune17Anniversary2028()
+        {
+            //Berlin, one-time public holiday, 4th law amending the Sonn- und Feiertagsgesetz (GVBl. 2024 Nr. 28 S. 460)
+            this.AssertObservedDate(2028, "75THANNIVERSARYOFTHEUPRISING-01", 2028, 6, 17);
+            this.AssertSubdivisionCodes(2028, "75THANNIVERSARYOFTHEUPRISING-01", "DE-BE");
+            this.AssertNoHoliday(2027, "75THANNIVERSARYOFTHEUPRISING-01");
+            this.AssertNoHoliday(2029, "75THANNIVERSARYOFTHEUPRISING-01");
         }
     }
 }
