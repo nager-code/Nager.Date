@@ -134,6 +134,7 @@ namespace Nager.Date.UnitTest.Countries
 
         [TestMethod]
         [DataRow(1954)]
+        [DataRow(1958)]
         [DataRow(1963)]
         [DataRow(1980)]
         [DataRow(1989)]
@@ -163,6 +164,56 @@ namespace Nager.Date.UnitTest.Countries
             //1990 is the only year with both: 17 June (Federal Republic, until reunification) and 3 October (Unification Treaty)
             this.AssertObservedDate(1990, "GERMANUNITYDAYJUNE17-01", 1990, 6, 17);
             this.AssertObservedDate(1990, "GERMANUNITYDAY-01", 1990, 10, 3);
+        }
+
+        [TestMethod]
+        [DataRow(1980, true)]
+        [DataRow(1981, false)]
+        [DataRow(1983, false)]
+        [DataRow(1984, true)]
+        [DataRow(2026, true)]
+        public void TestAllSaintsDayBavaria(int year, bool expectedBavaria)
+        {
+            //Bavaria, Feiertagsgesetz 1980 Art. 9 Abs. 2: statewide only from 1 January 1984, before only in predominantly Catholic municipalities
+            string[] expected = expectedBavaria
+                ? ["DE-BW", "DE-BY", "DE-NW", "DE-RP", "DE-SL"]
+                : ["DE-BW", "DE-NW", "DE-RP", "DE-SL"];
+
+            this.AssertSubdivisionCodes(year, "ALLSAINTSDAY-01", expected);
+        }
+
+        [TestMethod]
+        [DataRow(2018, new string[0])]
+        [DataRow(2019, new[] { "DE-BE" })]
+        [DataRow(2022, new[] { "DE-BE" })]
+        [DataRow(2023, new[] { "DE-BE", "DE-MV" })]
+        public void TestInternationalWomensDay(int year, string[] expectedSubdivisionCodes)
+        {
+            //Berlin since the law in force 7 February 2019, Mecklenburg-Vorpommern since the law of 7 July 2022 (in force 13 July 2022)
+            if (expectedSubdivisionCodes.Length == 0)
+            {
+                this.AssertNoHoliday(year, "INTERNATIONALWOMENSDAY-01");
+                return;
+            }
+
+            this.AssertSubdivisionCodes(year, "INTERNATIONALWOMENSDAY-01", expectedSubdivisionCodes);
+        }
+
+        [TestMethod]
+        public void TestReformationDay()
+        {
+            //2017 one-time nationwide (500th anniversary), Bremen and Hamburg (and NI, SH) since 2018
+            this.AssertSubdivisionCodes(2016, "REFORMATIONDAY-01", "DE-BB", "DE-MV", "DE-SN", "DE-ST", "DE-TH");
+            Assert.IsTrue(HolidaySystem.IsPublicHoliday(new DateTime(2017, 10, 31), CountryCode.DE, "DE-BY"));
+            this.AssertSubdivisionCodes(2018, "REFORMATIONDAY-01", "DE-BB", "DE-MV", "DE-SN", "DE-ST", "DE-TH", "DE-HB", "DE-HH", "DE-NI", "DE-SH");
+        }
+
+        [TestMethod]
+        public void TestRepentanceAndPrayerDay()
+        {
+            //Bremen law: listed until 9 December 1994, Berlin law version from 1 January 1995 without it
+            Assert.IsTrue(HolidaySystem.IsPublicHoliday(new DateTime(1994, 11, 16), CountryCode.DE, "DE-HB"));
+            this.AssertSubdivisionCodes(1995, "REPENTANCEANDPRAYERDAY-01", "DE-SN");
         }
 
         [TestMethod]

@@ -87,15 +87,7 @@ namespace Nager.Date.HolidayProviders
                     HolidayTypes = HolidayTypes.Public,
                     SubdivisionCodes = ["DE-SL"]
                 },
-                new HolidaySpecification
-                {
-                    Id = "ALLSAINTSDAY-01",
-                    Date = new DateTime(year, 11, 1),
-                    EnglishName = "All Saints' Day",
-                    LocalName = "Allerheiligen",
-                    HolidayTypes = HolidayTypes.Public,
-                    SubdivisionCodes = ["DE-BW", "DE-BY", "DE-NW", "DE-RP", "DE-SL"]
-                },
+                this.AllSaintsDay(year),
                 new HolidaySpecification
                 {
                     Id = "CHRISTMASDAY-01",
@@ -147,6 +139,29 @@ namespace Nager.Date.HolidayProviders
                 EnglishName = "German Unity Day",
                 LocalName = "Tag der Deutschen Einheit",
                 HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification AllSaintsDay(int year)
+        {
+            var subdivisionCodes = new List<string> { "DE-BW", "DE-NW", "DE-RP", "DE-SL" };
+
+            //Bavaria, Feiertagsgesetz of 21 May 1980 (in force 1 January 1981), Art. 9 Abs. 2
+            //All Saints' Day is a public holiday in the whole of Bavaria only from 1 January 1984,
+            //from 1981 to 1983 only in municipalities with a predominantly Catholic population (partial holidays are not mapped, see Assumption Day)
+            if (year < 1981 || year >= 1984)
+            {
+                subdivisionCodes.Insert(1, "DE-BY");
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "ALLSAINTSDAY-01",
+                Date = new DateTime(year, 11, 1),
+                EnglishName = "All Saints' Day",
+                LocalName = "Allerheiligen",
+                HolidayTypes = HolidayTypes.Public,
+                SubdivisionCodes = subdivisionCodes.ToArray()
             };
         }
 
@@ -378,6 +393,8 @@ namespace Nager.Date.HolidayProviders
                 "https://pardok.parlament-berlin.de/starweb/adis/citat/VT/19/gvbl/g24280460.pdf",
                 "https://www.bundestag.de/dokumente/textarchiv/1954-06-17-einheit-283168", //17 June 1954-1990
                 "https://www.gesetze-im-internet.de/einigvtr/BJNR208890990.html", //Unification Treaty 1990, 3 October replaces 17 June
+                "https://www.transparenz.bremen.de/metainformationen/gesetz-ueber-die-sonn-gedenk-und-feiertage-vom-12-november-1954-145882", //Bremen, 17 June listed 1958-1993
+                "https://www.gesetze-bayern.de/Content/Document/BayFTG/true", //Bavaria, All Saints' Day statewide since 1984 (Art. 9)
             ];
         }
     }
