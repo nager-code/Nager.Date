@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nager.Date.Models;
 using System;
 using System.Linq;
 
@@ -62,6 +63,107 @@ namespace Nager.Date.UnitTest.Countries
         {
             //The substitute holiday is assigned to Buddha's Birthday, Children's Day keeps its date
             this.AssertObservedDate(year, "CHILDRENSDAY-01", observedYear, month, day);
+        }
+
+        #endregion
+
+        #region History of the Regulation on Holidays of Government Offices
+
+        [TestMethod]
+        public void TestNewYearHolidays()
+        {
+            //January 1 to 3 until 1989, January 1 and 2 until 1998 (Presidential Decrees No. 12616 and No. 15939)
+            this.AssertObservedDate(1989, "NEWYEARSDAY-02", 1989, 1, 2);
+            this.AssertObservedDate(1989, "NEWYEARSDAY-03", 1989, 1, 3);
+
+            this.AssertObservedDate(1990, "NEWYEARSDAY-02", 1990, 1, 2);
+            this.AssertNoHoliday(1990, "NEWYEARSDAY-03");
+
+            this.AssertObservedDate(1998, "NEWYEARSDAY-02", 1998, 1, 2);
+            this.AssertNoHoliday(1999, "NEWYEARSDAY-02");
+            this.AssertObservedDate(1999, "NEWYEARSDAY-01", 1999, 1, 1);
+        }
+
+        [TestMethod]
+        public void TestArborDay()
+        {
+            //Removed from 2006 (Presidential Decree No. 18893)
+            this.AssertObservedDate(1980, "ARBORDAY-01", 1980, 4, 5);
+            this.AssertObservedDate(2005, "ARBORDAY-01", 2005, 4, 5);
+            this.AssertNoHoliday(2006, "ARBORDAY-01");
+        }
+
+        [TestMethod]
+        public void TestArmedForcesDay()
+        {
+            //Public holiday from 1976 (Presidential Decree No. 8235) until 1990 (Presidential Decree No. 13155)
+            this.AssertNoHoliday(1975, "ARMEDFORCESDAY-01");
+            this.AssertObservedDate(1976, "ARMEDFORCESDAY-01", 1976, 10, 1);
+            this.AssertObservedDate(1990, "ARMEDFORCESDAY-01", 1990, 10, 1);
+            this.AssertNoHoliday(1991, "ARMEDFORCESDAY-01");
+        }
+
+        [TestMethod]
+        public void TestNextDayRule1989()
+        {
+            //Presidential Decree No. 12616: a public holiday outside of the holiday periods on a Sunday, the next day is a public holiday as well
+            this.AssertObservedDate(1989, "ARMEDFORCESDAY-01", 1989, 10, 2); //Sunday
+
+            //Not in force before 1989 and after 1990
+            this.AssertObservedDate(1988, "CONSTITUTIONDAY-01", 1988, 7, 17); //Sunday
+            this.AssertObservedDate(1991, "CHILDRENSDAY-01", 1991, 5, 5); //Sunday
+        }
+
+        [TestMethod]
+        [DataRow(1990, HolidayTypes.Public)]
+        [DataRow(1991, HolidayTypes.Observance)] //Removed from the public holidays (Presidential Decree No. 13155)
+        [DataRow(2012, HolidayTypes.Observance)]
+        [DataRow(2013, HolidayTypes.Public)] //Public holiday again (Presidential Decree No. 24273)
+        public void TestHangulDayHolidayType(int year, HolidayTypes expectedHolidayTypes)
+        {
+            var holiday = HolidaySystem.GetHolidays(year, CountryCode.KR).Single(o => o.Id.EndsWith("HANGULDAY-01"));
+
+            Assert.AreEqual(new DateTime(year, 10, 9), holiday.Date);
+            Assert.AreEqual(expectedHolidayTypes, holiday.HolidayTypes);
+        }
+
+        [TestMethod]
+        [DataRow(1990, 1990, 5, 5)] //Saturday, no substitute holiday before 2014
+        [DataRow(2012, 2012, 5, 5)] //Saturday, no substitute holiday before 2014
+        [DataRow(2013, 2013, 5, 5)] //Sunday, no substitute holiday before 2014
+        [DataRow(2014, 2014, 5, 5)]
+        [DataRow(2018, 2018, 5, 7)] //Saturday, first substitute holiday after the amendment of November 2013
+        [DataRow(2019, 2019, 5, 6)] //Sunday, substituted by Monday
+        [DataRow(2024, 2024, 5, 6)] //Sunday, substituted by Monday (KASI calendar 2024)
+        public void TestChildrensDay(int year, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, "CHILDRENSDAY-01", observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2020, "LIBERATIONDAY-01", 2020, 8, 15)] //Saturday, no substitute holiday before the amendment of August 2021
+        [DataRow(2020, "NATIONALFOUNDATIONDAY-01", 2020, 10, 3)] //Saturday, no substitute holiday before the amendment of August 2021
+        [DataRow(2021, "INDEPENDENCEMOVEMENTDAY-01", 2021, 3, 1)]
+        [DataRow(2021, "LIBERATIONDAY-01", 2021, 8, 16)] //Sunday, substituted by Monday (korea.kr)
+        [DataRow(2021, "NATIONALFOUNDATIONDAY-01", 2021, 10, 4)] //Sunday, substituted by Monday (korea.kr)
+        [DataRow(2021, "HANGULDAY-01", 2021, 10, 11)] //Saturday, substituted by Monday (korea.kr)
+        [DataRow(2025, "INDEPENDENCEMOVEMENTDAY-01", 2025, 3, 3)] //Saturday, substituted by Monday (KASI calendar 2025)
+        [DataRow(2027, "LIBERATIONDAY-01", 2027, 8, 16)] //Sunday, substituted by Monday (KASI calendar 2027)
+        [DataRow(2027, "NATIONALFOUNDATIONDAY-01", 2027, 10, 4)] //Sunday, substituted by Monday (KASI calendar 2027)
+        [DataRow(2027, "HANGULDAY-01", 2027, 10, 11)] //Saturday, substituted by Monday (KASI calendar 2027)
+        public void TestNationalHolidaySubstituteHoliday(int year, string holidayId, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, holidayId, observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2004, 2004, 7, 17)] //Saturday, public holiday without substitute holiday
+        [DataRow(2021, 2021, 7, 17)] //Saturday, not a public holiday from 2008 to 2025
+        [DataRow(2026, 2026, 7, 17)]
+        [DataRow(2027, 2027, 7, 19)] //Saturday, substituted by Monday (KASI calendar 2027)
+        public void TestConstitutionDay(int year, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, "CONSTITUTIONDAY-01", observedYear, month, day);
         }
 
         #endregion

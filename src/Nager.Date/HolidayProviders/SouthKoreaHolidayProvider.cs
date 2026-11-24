@@ -48,12 +48,6 @@ namespace Nager.Date.HolidayProviders
         /// <inheritdoc/>
         protected override IEnumerable<HolidaySpecification> GetHolidaySpecifications(int year)
         {
-            var weekendObservedRuleSet = new ObservedRuleSet
-            {
-                Saturday = date => date.AddDays(2),
-                Sunday = date => date.AddDays(1),
-            };
-
             var holidaySpecifications = new List<HolidaySpecification>
             {
                 new HolidaySpecification
@@ -71,7 +65,8 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Children's Day",
                     LocalName = "어린이날",
                     HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = weekendObservedRuleSet,
+                    //Substitute holiday since the amendment of November 2013 (Presidential Decree No. 24828, first applied in 2014)
+                    ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2014),
                 },
                 new HolidaySpecification
                 {
@@ -80,6 +75,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Memorial Day",
                     LocalName = "현충일",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = this.GetNextDayObservedRuleSet(year),
                 },
                 new HolidaySpecification
                 {
@@ -88,16 +84,20 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Christmas Day",
                     LocalName = "크리스마스",
                     HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = year >= 2023 ? weekendObservedRuleSet : null,
+                    //Substitute holiday since the amendment of May 2023 (Presidential Decree No. 33448)
+                    ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2023),
                 }
             };
 
-            holidaySpecifications.AddIfNotNull(this.LabourDay(year, weekendObservedRuleSet));
-            holidaySpecifications.AddIfNotNull(this.ConstitutionDay(year, weekendObservedRuleSet));
-            holidaySpecifications.AddIfNotNull(this.IndependenceMovementDay(year, weekendObservedRuleSet));
-            holidaySpecifications.AddIfNotNull(this.LiberationDay(year, weekendObservedRuleSet));
-            holidaySpecifications.AddIfNotNull(this.NationalFoundationDay(year, weekendObservedRuleSet));
-            holidaySpecifications.AddIfNotNull(this.HangulDay(year, weekendObservedRuleSet));
+            holidaySpecifications.AddRangeIfNotNull(this.NewYearHolidays(year));
+            holidaySpecifications.AddIfNotNull(this.ArborDay(year));
+            holidaySpecifications.AddIfNotNull(this.ArmedForcesDay(year));
+            holidaySpecifications.AddIfNotNull(this.LabourDay(year));
+            holidaySpecifications.AddIfNotNull(this.ConstitutionDay(year));
+            holidaySpecifications.AddIfNotNull(this.IndependenceMovementDay(year));
+            holidaySpecifications.AddIfNotNull(this.LiberationDay(year));
+            holidaySpecifications.AddIfNotNull(this.NationalFoundationDay(year));
+            holidaySpecifications.AddIfNotNull(this.HangulDay(year));
 
             //Order matters: the substitute holidays of the lunisolar holidays depend on the dates of all
             //solar calendar holidays, add every new solar calendar holiday above this line.
@@ -260,17 +260,130 @@ namespace Nager.Date.HolidayProviders
             };
         }
 
-        private HolidaySpecification IndependenceMovementDay(
-            int year,
-            ObservedRuleSet observedRuleSet)
+        /// <summary>
+        /// Next-day rule of Presidential Decree No. 12616 (in force from 1989-02-01 until 1990-12-31):
+        /// if a public holiday outside of the holiday periods (New Year, Seollal, Chuseok) falls on a Sunday,
+        /// the next day is a public holiday as well
+        /// </summary>
+        private ObservedRuleSet? GetNextDayObservedRuleSet(int year)
         {
-            var holidayObservedRuleSet = observedRuleSet;
-
-            if (year < 2022)
+            if (year != 1989 && year != 1990)
             {
-                holidayObservedRuleSet = null;
+                return null;
             }
 
+            return new ObservedRuleSet
+            {
+                Sunday = date => date.AddDays(1),
+            };
+        }
+
+        /// <summary>
+        /// Substitute holiday rule of a public holiday on a fixed date of the solar calendar
+        /// </summary>
+        /// <param name="year">The year</param>
+        /// <param name="substituteHolidayStartYear">
+        /// The first year in which the holiday has a substitute holiday if it falls on a Saturday or a Sunday
+        /// (Regulation on Holidays of Government Offices, Art. 3)
+        /// </param>
+        private ObservedRuleSet? GetSolarHolidayObservedRuleSet(int year, int substituteHolidayStartYear)
+        {
+            if (year >= substituteHolidayStartYear)
+            {
+                return new ObservedRuleSet
+                {
+                    Saturday = date => date.AddDays(2),
+                    Sunday = date => date.AddDays(1),
+                };
+            }
+
+            return this.GetNextDayObservedRuleSet(year);
+        }
+
+        /// <summary>
+        /// January 2 and January 3, public holidays since the first regulation of 1949.
+        /// January 3 was removed by Presidential Decree No. 12616 (1989-02-01),
+        /// January 2 by Presidential Decree No. 15939 (1999-01-01)
+        /// </summary>
+        private HolidaySpecification[] NewYearHolidays(int year)
+        {
+            var holidaySpecifications = new List<HolidaySpecification>();
+
+            if (year >= 1950 && year <= 1998)
+            {
+                holidaySpecifications.Add(new HolidaySpecification
+                {
+                    Id = "NEWYEARSDAY-02",
+                    Date = new DateTime(year, 1, 2),
+                    EnglishName = "New Year's Day",
+                    LocalName = "새해",
+                    HolidayTypes = HolidayTypes.Public,
+                });
+            }
+
+            if (year >= 1950 && year <= 1989)
+            {
+                holidaySpecifications.Add(new HolidaySpecification
+                {
+                    Id = "NEWYEARSDAY-03",
+                    Date = new DateTime(year, 1, 3),
+                    EnglishName = "New Year's Day",
+                    LocalName = "새해",
+                    HolidayTypes = HolidayTypes.Public,
+                });
+            }
+
+            return [.. holidaySpecifications];
+        }
+
+        private HolidaySpecification? ArborDay(int year)
+        {
+            //Public holiday since the first regulation of 1949 (enacted on 1949-06-04),
+            //removed from 2006 by Presidential Decree No. 18893 (2005-06-30)
+            if (year < 1950 || year > 2005)
+            {
+                return null;
+            }
+
+            //In 1960 Arbor Day was replaced (Presidential Decree No. 1568) and restored in 1961 (Cabinet Decree No. 210)
+            if (year == 1960)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "ARBORDAY-01",
+                Date = new DateTime(year, 4, 5),
+                EnglishName = "Arbor Day",
+                LocalName = "식목일",
+                HolidayTypes = HolidayTypes.Public,
+                ObservedRuleSet = this.GetNextDayObservedRuleSet(year),
+            };
+        }
+
+        private HolidaySpecification? ArmedForcesDay(int year)
+        {
+            //Public holiday since Presidential Decree No. 8235 (1976-09-03),
+            //removed by Presidential Decree No. 13155 (1991-01-01)
+            if (year < 1976 || year > 1990)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "ARMEDFORCESDAY-01",
+                Date = new DateTime(year, 10, 1),
+                EnglishName = "Armed Forces Day",
+                LocalName = "국군의 날",
+                HolidayTypes = HolidayTypes.Public,
+                ObservedRuleSet = this.GetNextDayObservedRuleSet(year),
+            };
+        }
+
+        private HolidaySpecification IndependenceMovementDay(int year)
+        {
             return new HolidaySpecification
             {
                 Id = "INDEPENDENCEMOVEMENTDAY-01",
@@ -278,21 +391,13 @@ namespace Nager.Date.HolidayProviders
                 EnglishName = "Independence Movement Day",
                 LocalName = "3·1절",
                 HolidayTypes = HolidayTypes.Public,
-                ObservedRuleSet = holidayObservedRuleSet
+                //Substitute holiday since the amendment of August 2021 (Presidential Decree No. 31930), first applied in 2022
+                ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2022),
             };
         }
 
-        private HolidaySpecification LiberationDay(
-            int year,
-            ObservedRuleSet observedRuleSet)
+        private HolidaySpecification LiberationDay(int year)
         {
-            var holidayObservedRuleSet = observedRuleSet;
-
-            if (year < 2022)
-            {
-                holidayObservedRuleSet = null;
-            }
-
             return new HolidaySpecification
             {
                 Id = "LIBERATIONDAY-01",
@@ -300,21 +405,13 @@ namespace Nager.Date.HolidayProviders
                 EnglishName = "Liberation Day",
                 LocalName = "광복절",
                 HolidayTypes = HolidayTypes.Public,
-                ObservedRuleSet = holidayObservedRuleSet
+                //Substitute holiday since the amendment of August 2021 (Presidential Decree No. 31930), first on 2021-08-16
+                ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2021),
             };
         }
 
-        private HolidaySpecification NationalFoundationDay(
-            int year,
-            ObservedRuleSet observedRuleSet)
+        private HolidaySpecification NationalFoundationDay(int year)
         {
-            var holidayObservedRuleSet = observedRuleSet;
-
-            if (year < 2022)
-            {
-                holidayObservedRuleSet = null;
-            }
-
             return new HolidaySpecification
             {
                 Id = "NATIONALFOUNDATIONDAY-01",
@@ -322,19 +419,20 @@ namespace Nager.Date.HolidayProviders
                 EnglishName = "National Foundation Day",
                 LocalName = "개천절",
                 HolidayTypes = HolidayTypes.Public,
-                ObservedRuleSet = holidayObservedRuleSet
+                //Substitute holiday since the amendment of August 2021 (Presidential Decree No. 31930), first on 2021-10-04
+                ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2021),
             };
         }
 
-        private HolidaySpecification HangulDay(
-            int year,
-            ObservedRuleSet observedRuleSet)
+        private HolidaySpecification HangulDay(int year)
         {
-            var holidayObservedRuleSet = observedRuleSet;
+            var holidayTypes = HolidayTypes.Public;
 
-            if (year < 2022)
+            //Removed from the public holidays by Presidential Decree No. 13155 (1991-01-01),
+            //public holiday again since Presidential Decree No. 24273 (2012-12-28)
+            if (year >= 1991 && year <= 2012)
             {
-                holidayObservedRuleSet = null;
+                holidayTypes = HolidayTypes.Observance;
             }
 
             return new HolidaySpecification
@@ -343,14 +441,13 @@ namespace Nager.Date.HolidayProviders
                 Date = new DateTime(year, 10, 9),
                 EnglishName = "Hangul Day",
                 LocalName = "한글날",
-                HolidayTypes = HolidayTypes.Public,
-                ObservedRuleSet = holidayObservedRuleSet
+                HolidayTypes = holidayTypes,
+                //Substitute holiday since the amendment of August 2021 (Presidential Decree No. 31930), first on 2021-10-11
+                ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2021),
             };
         }
 
-        private HolidaySpecification? LabourDay(
-            int year,
-            ObservedRuleSet observedRuleSet)
+        private HolidaySpecification? LabourDay(int year)
         {
             if (year < 2026)
             {
@@ -364,13 +461,11 @@ namespace Nager.Date.HolidayProviders
                 EnglishName = "Labour Day",
                 LocalName = "노동절",
                 HolidayTypes = HolidayTypes.Public,
-                ObservedRuleSet = observedRuleSet
+                ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2026),
             };
         }
 
-        private HolidaySpecification ConstitutionDay(
-            int year,
-            ObservedRuleSet observedRuleSet)
+        private HolidaySpecification ConstitutionDay(int year)
         {
             var holidayTypes = HolidayTypes.Public;
 
@@ -386,7 +481,8 @@ namespace Nager.Date.HolidayProviders
                 EnglishName = "Constitution Day",
                 LocalName = "제헌절",
                 HolidayTypes = holidayTypes,
-                ObservedRuleSet = observedRuleSet
+                //Substitute holiday since the amendment of April 2026 (Presidential Decree No. 36290)
+                ObservedRuleSet = this.GetSolarHolidayObservedRuleSet(year, 2026),
             };
         }
 
@@ -574,7 +670,9 @@ namespace Nager.Date.HolidayProviders
                     //Regulation on Holidays of Government Offices, amendment of May 2023:
                     //substitute holiday also if Buddha's Birthday falls on a weekend or another public holiday
                     //(e.g. 2025, Buddha's Birthday and Children's Day on May 5 -> substitute holiday on May 6)
-                    ObservedRuleSet = year >= 2023 ? this.GetSubstituteHolidayObservedRuleSet(solarPublicHolidayDates) : null
+                    ObservedRuleSet = year >= 2023
+                        ? this.GetSubstituteHolidayObservedRuleSet(solarPublicHolidayDates)
+                        : this.GetNextDayObservedRuleSet(year)
                 });
 
                 //Presidential Decree No. 11962 (1986-09-11): the day after Chuseok is added
@@ -648,9 +746,19 @@ namespace Nager.Date.HolidayProviders
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2028", //Substitute holiday for Chuseok on October 5 (2028)
                 "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=145846", //Substitute holiday for Seollal and Chuseok on a Sunday or another public holiday, Art. 3 (2013)
                 "https://www.law.go.kr/LSW/lsRvsRsnListP.do?lsId=002404&chrClsCd=010102", //Reasons of all amendments of the Regulation on Holidays of Government Offices (1985-2026)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10289", //First regulation with January 1 to 3, Arbor Day and Hangul Day (1949)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10397", //Arbor Day replaced (1960)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10399", //Arbor Day restored (1961)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10403", //Armed Forces Day becomes a public holiday (1976)
                 "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10404", //Lunar New Year becomes a public holiday (1985)
                 "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10405", //The day after Chuseok becomes a public holiday (1986)
-                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10406", //Seollal and Chuseok with three days each, next-day rule only for holidays outside of the holiday periods (1989-1990)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10406", //Seollal and Chuseok with three days each, January 3 removed, next-day rule only for holidays outside of the holiday periods (1989-1990)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10407", //Armed Forces Day and Hangul Day removed, next-day rule abolished (1991)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10408", //January 2 removed (1999)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=70966", //Arbor Day removed from 2006, Constitution Day from 2008 (2005)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=131164", //Hangul Day is a public holiday again (2012)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=234501", //Substitute holiday for Independence Movement Day, Liberation Day, National Foundation Day and Hangul Day (2021)
+                "https://www.korea.kr/news/policyNewsView.do?newsId=148890227", //Substitute holidays on August 16, October 4 and October 11 (2021)
                 "https://www.kasi.re.kr/kor/publication/post/newsMaterial/2536", //Seollal holidays from February 7 to 10 including the substitute holiday (2016)
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2027", //Substitute holiday for Seollal on February 9 (2027)
                 "https://www.law.go.kr/LSW/lsInfoR.do?lsiSeq=75972&efYd=20060906&chrClsCd=010202", //Election days of term-expiration elections are public holidays (2006)
