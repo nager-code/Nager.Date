@@ -98,5 +98,57 @@ namespace Nager.Date.UnitTest.Countries
         }
 
         #endregion
+
+        #region Election days
+
+        [TestMethod]
+        [DataRow(2002, 2002, 12, 19)]
+        [DataRow(2007, 2007, 12, 19)]
+        [DataRow(2012, 2012, 12, 19)]
+        [DataRow(2017, 2017, 5, 9)]
+        [DataRow(2022, 2022, 3, 9)]
+        [DataRow(2025, 2025, 6, 3)]
+        public void TestPresidentialElectionDay(int year, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, "PRESIDENTIALELECTIONDAY-01", observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2004, 2004, 4, 15)]
+        [DataRow(2008, 2008, 4, 9)]
+        [DataRow(2012, 2012, 4, 11)]
+        [DataRow(2016, 2016, 4, 13)]
+        [DataRow(2020, 2020, 4, 15)]
+        [DataRow(2024, 2024, 4, 10)]
+        public void TestNationalAssemblyElectionDay(int year, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, "NATIONALASSEMBLYELECTIONDAY-01", observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2002, 2002, 6, 13)]
+        [DataRow(2006, 2006, 5, 31)]
+        [DataRow(2010, 2010, 6, 2)]
+        [DataRow(2014, 2014, 6, 4)]
+        [DataRow(2018, 2018, 6, 13)]
+        [DataRow(2022, 2022, 6, 1)]
+        [DataRow(2026, 2026, 6, 3)]
+        public void TestLocalElectionDay(int year, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, "LOCALELECTIONDAY-01", observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2001)]
+        [DataRow(2023)]
+        [DataRow(2027)]
+        public void TestNoElectionDay(int year)
+        {
+            this.AssertNoHoliday(year, "PRESIDENTIALELECTIONDAY-01");
+            this.AssertNoHoliday(year, "NATIONALASSEMBLYELECTIONDAY-01");
+            this.AssertNoHoliday(year, "LOCALELECTIONDAY-01");
+        }
+
+        #endregion
     }
 }

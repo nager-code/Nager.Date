@@ -75,19 +75,103 @@ namespace Nager.Date.HolidayProviders
             var solarPublicHolidayDates = this.GetPublicHolidayDates(holidaySpecifications);
             holidaySpecifications.AddRangeIfNotNull(this.GetKoreanLunisolarHolidays(year, solarPublicHolidayDates));
 
-            if (year == 2026)
-            {
-                holidaySpecifications.Add(new HolidaySpecification
-                {
-                    Id = "LOCALELECTIONDAY2026-01",
-                    Date = new DateTime(year, 6, 3),
-                    EnglishName = "Local Election Day",
-                    LocalName = "지방 선거일",
-                    HolidayTypes = HolidayTypes.Public,
-                });
-            }
+            holidaySpecifications.AddIfNotNull(this.PresidentialElectionDay(year));
+            holidaySpecifications.AddIfNotNull(this.NationalAssemblyElectionDay(year));
+            holidaySpecifications.AddIfNotNull(this.LocalElectionDay(year));
 
             return holidaySpecifications;
+        }
+
+        // Election days
+        // Until 2006 every election day was designated individually as a temporary public holiday (관보 notices),
+        // since 2006-09-06 the election day of a term-expiration election is a public holiday by the
+        // Regulation on Holidays of Government Offices, Art. 2 No. 10-2 (Presidential Decree No. 19674).
+        // Special elections (e.g. 2017, 2025) are still designated individually as temporary public holidays.
+        // Election days before 2002 are not included, no official source has been found yet.
+
+        private HolidaySpecification? PresidentialElectionDay(int year)
+        {
+            DateTime? date = year switch
+            {
+                2002 => new DateTime(2002, 12, 19), //Temporary public holiday, 행정자치부공고 제2002-150호
+                2007 => new DateTime(2007, 12, 19),
+                2012 => new DateTime(2012, 12, 19),
+                2017 => new DateTime(2017, 5, 9), //Special election, temporary public holiday, 인사혁신처공고 제2017-90호
+                2022 => new DateTime(2022, 3, 9),
+                2025 => new DateTime(2025, 6, 3), //Special election, temporary public holiday, 인사혁신처공고 제2025-133호
+                _ => null
+            };
+
+            if (date is null)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "PRESIDENTIALELECTIONDAY-01",
+                Date = date.Value,
+                EnglishName = "Presidential Election Day",
+                LocalName = "대통령 선거일",
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification? NationalAssemblyElectionDay(int year)
+        {
+            DateTime? date = year switch
+            {
+                2004 => new DateTime(2004, 4, 15), //Temporary public holiday, 행정자치부공고 제2004-47호
+                2008 => new DateTime(2008, 4, 9),
+                2012 => new DateTime(2012, 4, 11),
+                2016 => new DateTime(2016, 4, 13),
+                2020 => new DateTime(2020, 4, 15),
+                2024 => new DateTime(2024, 4, 10),
+                _ => null
+            };
+
+            if (date is null)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "NATIONALASSEMBLYELECTIONDAY-01",
+                Date = date.Value,
+                EnglishName = "National Assembly Election Day",
+                LocalName = "국회의원 선거일",
+                HolidayTypes = HolidayTypes.Public,
+            };
+        }
+
+        private HolidaySpecification? LocalElectionDay(int year)
+        {
+            DateTime? date = year switch
+            {
+                2002 => new DateTime(2002, 6, 13), //Temporary public holiday, 행정자치부공고 제2002-46호
+                2006 => new DateTime(2006, 5, 31), //Temporary public holiday, 행정자치부공고 제2006-68호
+                2010 => new DateTime(2010, 6, 2),
+                2014 => new DateTime(2014, 6, 4),
+                2018 => new DateTime(2018, 6, 13),
+                2022 => new DateTime(2022, 6, 1),
+                2026 => new DateTime(2026, 6, 3),
+                _ => null
+            };
+
+            if (date is null)
+            {
+                return null;
+            }
+
+            return new HolidaySpecification
+            {
+                Id = "LOCALELECTIONDAY-01",
+                Date = date.Value,
+                EnglishName = "Local Election Day",
+                LocalName = "지방 선거일",
+                HolidayTypes = HolidayTypes.Public,
+            };
         }
 
         private HolidaySpecification IndependenceMovementDay(
@@ -404,6 +488,10 @@ namespace Nager.Date.HolidayProviders
                 "https://news.seoul.go.kr/gov/?p=61716", //Substitute holiday for Seollal, Chuseok and Children's Day (2013)
                 "https://m.korea.kr/news/issueQAView.do?newsId=148842064", //Chuseok holidays from September 30 to October 9 (2017)
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2028", //Substitute holiday for Chuseok on October 5 (2028)
+                "https://www.law.go.kr/LSW/lsInfoR.do?lsiSeq=75972&efYd=20060906&chrClsCd=010202", //Election days of term-expiration elections are public holidays (2006)
+                "https://info.nec.go.kr/main/main_previous_load.xhtml", //Election dates (2006-2025)
+                "https://www.korea.kr/news/policyNewsView.do?newsId=148830297", //Presidential Election Day, temporary public holiday (2017)
+                "https://www.korea.kr/news/policyNewsView.do?newsId=148941443", //Presidential Election Day, temporary public holiday (2025)
             ];
         }
     }
