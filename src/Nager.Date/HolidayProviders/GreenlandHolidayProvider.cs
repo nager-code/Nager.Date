@@ -122,7 +122,7 @@ namespace Nager.Date.HolidayProviders
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Greenland",
                 "https://www.norden.org/da/info-norden/helligdage-i-groenland",
-                "https://nalunaarutit.gl/groenlandsk-lovgivning/2008/bkg-26-2008", // Flag days, 2008-2025
+                "https://nalunaarutit.gl/arkiv/gh.gl-love/dk/2008/bkg/bkg_nr_26-2008_dk.htm", // Flag days, 2008-2025
                 "https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025" // Flag days, since 2025-08-01
             ];
         }
