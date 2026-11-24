@@ -527,33 +527,43 @@ namespace Nager.Date.HolidayProviders
                         solarPublicHolidayDates);
                 }
 
-                holidaySpecifications.Add(new HolidaySpecification
+                //Presidential Decree No. 11615 (1985-01-21): the first day of the lunisolar year becomes a public holiday (민속의 날)
+                //Presidential Decree No. 12616 (1989-02-01): renamed to Seollal (설날), the day before and the day after are added
+                if (year >= 1985)
                 {
-                    Id = "LUNARNEWYEAR-01",
-                    Date = lunarNewYear1,
-                    EnglishName = "Lunar New Year",
-                    LocalName = "설날",
-                    HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = lunarNewYearObservedRuleSets[1],
-                });
-                holidaySpecifications.Add(new HolidaySpecification
+                    holidaySpecifications.Add(new HolidaySpecification
+                    {
+                        Id = "LUNARNEWYEAR-01",
+                        Date = lunarNewYear1,
+                        EnglishName = year >= 1989 ? "Lunar New Year" : "Folklore Day",
+                        LocalName = year >= 1989 ? "설날" : "민속의 날",
+                        HolidayTypes = HolidayTypes.Public,
+                        ObservedRuleSet = lunarNewYearObservedRuleSets[1],
+                    });
+                }
+
+                if (year >= 1989)
                 {
-                    Id = "LUNARNEWYEAR-02",
-                    Date = lunarNewYear2,
-                    EnglishName = "Lunar New Year",
-                    LocalName = "설날",
-                    HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = lunarNewYearObservedRuleSets[2],
-                });
-                holidaySpecifications.Add(new HolidaySpecification
-                {
-                    Id = "LUNARNEWYEAR-03",
-                    Date = lunarNewYear3,
-                    EnglishName = "Lunar New Year",
-                    LocalName = "설날",
-                    HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = lunarNewYearObservedRuleSets[0],
-                });
+                    holidaySpecifications.Add(new HolidaySpecification
+                    {
+                        Id = "LUNARNEWYEAR-02",
+                        Date = lunarNewYear2,
+                        EnglishName = "Lunar New Year",
+                        LocalName = "설날",
+                        HolidayTypes = HolidayTypes.Public,
+                        ObservedRuleSet = lunarNewYearObservedRuleSets[2],
+                    });
+                    holidaySpecifications.Add(new HolidaySpecification
+                    {
+                        Id = "LUNARNEWYEAR-03",
+                        Date = lunarNewYear3,
+                        EnglishName = "Lunar New Year",
+                        LocalName = "설날",
+                        HolidayTypes = HolidayTypes.Public,
+                        ObservedRuleSet = lunarNewYearObservedRuleSets[0],
+                    });
+                }
+
                 holidaySpecifications.Add(new HolidaySpecification
                 {
                     Id = "BUDDHASBIRTHDAY-01",
@@ -566,15 +576,22 @@ namespace Nager.Date.HolidayProviders
                     //(e.g. 2025, Buddha's Birthday and Children's Day on May 5 -> substitute holiday on May 6)
                     ObservedRuleSet = year >= 2023 ? this.GetSubstituteHolidayObservedRuleSet(solarPublicHolidayDates) : null
                 });
-                holidaySpecifications.Add(new HolidaySpecification
+
+                //Presidential Decree No. 11962 (1986-09-11): the day after Chuseok is added
+                //Presidential Decree No. 12616 (1989-02-01): the day before Chuseok is added
+                if (year >= 1989)
                 {
-                    Id = "CHUSEOK-01",
-                    Date = chuseok1,
-                    EnglishName = "Chuseok",
-                    LocalName = "추석",
-                    HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = chuseokObservedRuleSets[0],
-                });
+                    holidaySpecifications.Add(new HolidaySpecification
+                    {
+                        Id = "CHUSEOK-01",
+                        Date = chuseok1,
+                        EnglishName = "Chuseok",
+                        LocalName = "추석",
+                        HolidayTypes = HolidayTypes.Public,
+                        ObservedRuleSet = chuseokObservedRuleSets[0],
+                    });
+                }
+
                 holidaySpecifications.Add(new HolidaySpecification
                 {
                     Id = "CHUSEOK-02",
@@ -584,15 +601,19 @@ namespace Nager.Date.HolidayProviders
                     HolidayTypes = HolidayTypes.Public,
                     ObservedRuleSet = chuseokObservedRuleSets[1],
                 });
-                holidaySpecifications.Add(new HolidaySpecification
+
+                if (year >= 1986)
                 {
-                    Id = "CHUSEOK-03",
-                    Date = chuseok3,
-                    EnglishName = "Chuseok",
-                    LocalName = "추석",
-                    HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = chuseokObservedRuleSets[2],
-                });
+                    holidaySpecifications.Add(new HolidaySpecification
+                    {
+                        Id = "CHUSEOK-03",
+                        Date = chuseok3,
+                        EnglishName = "Chuseok",
+                        LocalName = "추석",
+                        HolidayTypes = HolidayTypes.Public,
+                        ObservedRuleSet = chuseokObservedRuleSets[2],
+                    });
+                }
             }
 
             return [.. holidaySpecifications];
@@ -627,7 +648,9 @@ namespace Nager.Date.HolidayProviders
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2028", //Substitute holiday for Chuseok on October 5 (2028)
                 "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=145846", //Substitute holiday for Seollal and Chuseok on a Sunday or another public holiday, Art. 3 (2013)
                 "https://www.law.go.kr/LSW/lsRvsRsnListP.do?lsId=002404&chrClsCd=010102", //Reasons of all amendments of the Regulation on Holidays of Government Offices (1985-2026)
-                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10406", //Next-day rule only for holidays outside of the holiday periods (1989-1990)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10404", //Lunar New Year becomes a public holiday (1985)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10405", //The day after Chuseok becomes a public holiday (1986)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10406", //Seollal and Chuseok with three days each, next-day rule only for holidays outside of the holiday periods (1989-1990)
                 "https://www.kasi.re.kr/kor/publication/post/newsMaterial/2536", //Seollal holidays from February 7 to 10 including the substitute holiday (2016)
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2027", //Substitute holiday for Seollal on February 9 (2027)
                 "https://www.law.go.kr/LSW/lsInfoR.do?lsiSeq=75972&efYd=20060906&chrClsCd=010202", //Election days of term-expiration elections are public holidays (2006)

@@ -69,6 +69,11 @@ namespace Nager.Date.UnitTest.Countries
         #region Seollal
 
         [TestMethod]
+        [DataRow(1985, "LUNARNEWYEAR-01", 2, 20, 2, 20)] //First year as public holiday (Presidential Decree No. 11615)
+        [DataRow(1988, "LUNARNEWYEAR-01", 2, 18, 2, 18)]
+        [DataRow(1989, "LUNARNEWYEAR-03", 2, 5, 2, 5)] //Three days since 1989 (Presidential Decree No. 12616)
+        [DataRow(1989, "LUNARNEWYEAR-01", 2, 6, 2, 6)]
+        [DataRow(1989, "LUNARNEWYEAR-02", 2, 7, 2, 7)]
         [DataRow(1990, "LUNARNEWYEAR-03", 1, 26, 1, 26)]
         [DataRow(1990, "LUNARNEWYEAR-01", 1, 27, 1, 27)]
         [DataRow(1990, "LUNARNEWYEAR-02", 1, 28, 1, 28)] //Sunday, the next-day rule of 1989 and 1990 did not apply to the holiday periods
@@ -105,11 +110,39 @@ namespace Nager.Date.UnitTest.Countries
             this.AssertDateAndObservedDate(year, holidayId, month, day, observedMonth, observedDay);
         }
 
+        [TestMethod]
+        public void TestSeollalBefore1989()
+        {
+            //The first day of the lunisolar year is a public holiday since 1985, until 1988 as a single day (민속의 날)
+            this.AssertNoHoliday(1984, "LUNARNEWYEAR-01");
+            this.AssertNoHoliday(1984, "LUNARNEWYEAR-02");
+            this.AssertNoHoliday(1984, "LUNARNEWYEAR-03");
+
+            this.AssertNoHoliday(1985, "LUNARNEWYEAR-02");
+            this.AssertNoHoliday(1985, "LUNARNEWYEAR-03");
+            this.AssertNoHoliday(1988, "LUNARNEWYEAR-02");
+            this.AssertNoHoliday(1988, "LUNARNEWYEAR-03");
+
+            var holiday1988 = HolidaySystem.GetHolidays(1988, CountryCode.KR).Single(o => o.Id.EndsWith("LUNARNEWYEAR-01"));
+            Assert.AreEqual("민속의 날", holiday1988.LocalName);
+
+            var holiday1989 = HolidaySystem.GetHolidays(1989, CountryCode.KR).Single(o => o.Id.EndsWith("LUNARNEWYEAR-01"));
+            Assert.AreEqual("설날", holiday1989.LocalName);
+        }
+
         #endregion
 
         #region Chuseok
 
         [TestMethod]
+        [DataRow(1985, "CHUSEOK-02", 9, 29, 9, 29)] //Only Chuseok itself is a public holiday until 1985
+        [DataRow(1986, "CHUSEOK-02", 9, 18, 9, 18)]
+        [DataRow(1986, "CHUSEOK-03", 9, 19, 9, 19)] //The day after Chuseok since 1986 (Presidential Decree No. 11962)
+        [DataRow(1988, "CHUSEOK-02", 9, 25, 9, 25)]
+        [DataRow(1988, "CHUSEOK-03", 9, 26, 9, 26)]
+        [DataRow(1989, "CHUSEOK-01", 9, 13, 9, 13)] //The day before Chuseok since 1989 (Presidential Decree No. 12616)
+        [DataRow(1989, "CHUSEOK-02", 9, 14, 9, 14)]
+        [DataRow(1989, "CHUSEOK-03", 9, 15, 9, 15)]
         [DataRow(2012, "CHUSEOK-01", 9, 29, 9, 29)]
         [DataRow(2012, "CHUSEOK-02", 9, 30, 9, 30)] //Sunday, no substitute holiday before 2014
         [DataRow(2012, "CHUSEOK-03", 10, 1, 10, 1)]
@@ -140,6 +173,16 @@ namespace Nager.Date.UnitTest.Countries
         public void TestChuseok(int year, string holidayId, int month, int day, int observedMonth, int observedDay)
         {
             this.AssertDateAndObservedDate(year, holidayId, month, day, observedMonth, observedDay);
+        }
+
+        [TestMethod]
+        public void TestChuseokBefore1989()
+        {
+            this.AssertNoHoliday(1985, "CHUSEOK-01");
+            this.AssertNoHoliday(1985, "CHUSEOK-03");
+
+            this.AssertNoHoliday(1986, "CHUSEOK-01");
+            this.AssertNoHoliday(1988, "CHUSEOK-01");
         }
 
         [TestMethod]
