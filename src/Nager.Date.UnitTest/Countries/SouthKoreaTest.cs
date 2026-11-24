@@ -41,11 +41,25 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2022, 2022, 5, 8)] //Sunday, no substitute holiday before 2023
         [DataRow(2023, 2023, 5, 29)] //Saturday, first substitute holiday after the amendment
         [DataRow(2024, 2024, 5, 15)]
+        [DataRow(2025, 2025, 5, 6)] //Same day as Children's Day, substituted by the next non-holiday (KASI calendar 2025)
         [DataRow(2026, 2026, 5, 25)] //Sunday, substituted by Monday
         [DataRow(2027, 2027, 5, 13)]
+        [DataRow(2036, 2036, 5, 6)] //Saturday, Monday is the substitute holiday of Children's Day, substituted by Tuesday
+        [DataRow(2039, 2039, 5, 3)] //Saturday, Monday is the substitute holiday of Labour Day, substituted by Tuesday
+        [DataRow(2044, 2044, 5, 6)] //Same day as Children's Day, substituted by the next non-holiday
         public void TestBuddhasBirthday(int year, int observedYear, int month, int day)
         {
             this.AssertObservedDate(year, "BUDDHASBIRTHDAY-01", observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2025, 2025, 5, 5)]
+        [DataRow(2036, 2036, 5, 5)]
+        [DataRow(2044, 2044, 5, 5)]
+        public void TestChildrensDayOnSameDayAsBuddhasBirthday(int year, int observedYear, int month, int day)
+        {
+            //The substitute holiday is assigned to Buddha's Birthday, Children's Day keeps its date
+            this.AssertObservedDate(year, "CHILDRENSDAY-01", observedYear, month, day);
         }
 
         #endregion

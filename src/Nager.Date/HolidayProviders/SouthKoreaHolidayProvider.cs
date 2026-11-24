@@ -72,7 +72,8 @@ namespace Nager.Date.HolidayProviders
             holidaySpecifications.AddIfNotNull(this.LiberationDay(year, weekendObservedRuleSet));
             holidaySpecifications.AddIfNotNull(this.NationalFoundationDay(year, weekendObservedRuleSet));
             holidaySpecifications.AddIfNotNull(this.HangulDay(year, weekendObservedRuleSet));
-            holidaySpecifications.AddRangeIfNotNull(this.GetKoreanLunisolarHolidays(year, weekendObservedRuleSet));
+            var solarPublicHolidayDates = this.GetPublicHolidayDates(holidaySpecifications);
+            holidaySpecifications.AddRangeIfNotNull(this.GetKoreanLunisolarHolidays(year, solarPublicHolidayDates));
 
             if (year == 2026)
             {
@@ -219,7 +220,64 @@ namespace Nager.Date.HolidayProviders
             };
         }
 
-        private HolidaySpecification[] GetKoreanLunisolarHolidays(int year, ObservedRuleSet observedRuleSet)
+        /// <summary>
+        /// Collects the dates (including substitute dates) of the given public holidays
+        /// </summary>
+        private HashSet<DateTime> GetPublicHolidayDates(IEnumerable<HolidaySpecification> holidaySpecifications)
+        {
+            var holidayDates = new HashSet<DateTime>();
+
+            foreach (var holidaySpecification in holidaySpecifications)
+            {
+                if (!holidaySpecification.HolidayTypes.HasFlag(HolidayTypes.Public))
+                {
+                    continue;
+                }
+
+                holidayDates.Add(holidaySpecification.Date);
+
+                var observedDate = holidaySpecification.ObservedRuleSet?.GetObservedDate(holidaySpecification.Date);
+                if (observedDate.HasValue)
+                {
+                    holidayDates.Add(observedDate.Value);
+                }
+            }
+
+            return holidayDates;
+        }
+
+        /// <summary>
+        /// Substitute holiday: if the holiday falls on a Saturday, a Sunday or another public holiday,
+        /// the first following day that is neither a weekend day nor a public holiday is a holiday
+        /// </summary>
+        private ObservedRuleSet GetSubstituteHolidayObservedRuleSet(HashSet<DateTime> otherHolidayDates)
+        {
+            DateTime GetSubstituteDate(DateTime date)
+            {
+                var substituteDate = date;
+                while (substituteDate.DayOfWeek == DayOfWeek.Saturday ||
+                    substituteDate.DayOfWeek == DayOfWeek.Sunday ||
+                    otherHolidayDates.Contains(substituteDate))
+                {
+                    substituteDate = substituteDate.AddDays(1);
+                }
+
+                return substituteDate;
+            }
+
+            return new ObservedRuleSet
+            {
+                Monday = GetSubstituteDate,
+                Tuesday = GetSubstituteDate,
+                Wednesday = GetSubstituteDate,
+                Thursday = GetSubstituteDate,
+                Friday = GetSubstituteDate,
+                Saturday = GetSubstituteDate,
+                Sunday = GetSubstituteDate,
+            };
+        }
+
+        private HolidaySpecification[] GetKoreanLunisolarHolidays(int year, HashSet<DateTime> solarPublicHolidayDates)
         {
             var holidaySpecifications = new List<HolidaySpecification>();
 
@@ -272,7 +330,10 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Buddha's Birthday",
                     LocalName = "부처님 오신 날",
                     HolidayTypes = HolidayTypes.Public,
-                    ObservedRuleSet = year >= 2023 ? observedRuleSet : null
+                    //Regulation on Holidays of Government Offices, amendment of May 2023:
+                    //substitute holiday also if Buddha's Birthday falls on a weekend or another public holiday
+                    //(e.g. 2025, Buddha's Birthday and Children's Day on May 5 -> substitute holiday on May 6)
+                    ObservedRuleSet = year >= 2023 ? this.GetSubstituteHolidayObservedRuleSet(solarPublicHolidayDates) : null
                 });
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -324,7 +385,9 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_South_Korea", //South Korea's public holidays
-                "https://www.law.go.kr/lsInfoP.do?lsiSeq=233829#0000"
+                "https://www.law.go.kr/lsInfoP.do?lsiSeq=233829#0000",
+                "https://m.korea.kr/news/policyNewsView.do?newsId=148912746", //Substitute holiday for Buddha's Birthday and Christmas Day (2023)
+                "https://astro.kasi.re.kr/life/post/calendarData?year=2025", //Substitute holiday for Buddha's Birthday on May 6 (2025)
             ];
         }
     }
