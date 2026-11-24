@@ -37,15 +37,16 @@ namespace Nager.Date.HolidayProviders
                     LocalName = "Ukiortaaq",
                     HolidayTypes = HolidayTypes.Public,
                 },
-                // 6 January is only listed as a flag day (Ullut erfalasulisaarfissat), not as a day off
-                // Hjemmestyrets bekendtgørelse nr. 26 af 11.11.2008 and Selvstyrets bekendtgørelse nr. 55 af 11.07.2025 (Annex 1)
+                // 6 January is an official flag day (Hjemmestyrets bekendtgørelse nr. 26 af 11.11.2008 om flagdage,
+                // Selvstyrets bekendtgørelse nr. 55 af 11.07.2025 Annex 1) but not a church holiday and not a bank closing day.
+                // Danish state employees in Greenland have half a day off (Medarbejder- og Kompetencestyrelsen, Medst.nr. 004-26)
                 new HolidaySpecification
                 {
                     Id = "EPIPHANY-01",
                     Date = new DateTime(year, 1, 6),
                     EnglishName = "Epiphany",
                     LocalName = "Kunngit pingasut ulluat",
-                    HolidayTypes = HolidayTypes.Observance
+                    HolidayTypes = HolidayTypes.Observance | HolidayTypes.Authorities
                 },
                 new HolidaySpecification
                 {
@@ -123,7 +124,12 @@ namespace Nager.Date.HolidayProviders
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Greenland",
                 "https://www.norden.org/da/info-norden/helligdage-i-groenland",
                 "https://nalunaarutit.gl/arkiv/gh.gl-love/dk/2008/bkg/bkg_nr_26-2008_dk.htm", // Flag days, 2008-2025
-                "https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025" // Flag days, since 2025-08-01
+                "https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025", // Flag days, since 2025-08-01
+                "https://cirkulaere.medst.dk/media/d4qjfqnj/004-26.pdf", // Special holidays for state employees in Greenland, 2026
+                "https://ina.gl/media/fbqmf3c5/pkt57_fm2024_bf33_solhvervsdagen_sn_1beh_da.pdf", // Days off on church holidays via collective agreements, 2024
+                "https://ina.gl/media/uj4ht2t2/202_2020_officiel_maerkedag_ppol_svar.pdf", // National Day as full day off (Cirkulære nr. 3/92), 2020
+                "https://www.retsinformation.dk/eli/lta/2023/214", // Abolition of Store Bededag does not apply to Greenland (§ 8), 2023
+                "https://www.banken.gl/da/kontakt/" // Bank closing days
             ];
         }
     }

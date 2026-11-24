@@ -7,12 +7,30 @@ using System.Linq;
 namespace Nager.Date.UnitTest.Countries
 {
     /// <summary>
-    /// Expected dates and types are taken from:
-    /// - Hjemmestyrets bekendtgørelse nr. 26 af 11. november 2008 om flagdage
-    ///   (https://nalunaarutit.gl/arkiv/gh.gl-love/dk/2008/bkg/bkg_nr_26-2008_dk.htm)
-    /// - Selvstyrets bekendtgørelse nr. 55 af 11. juli 2025, Annex 1 (flag days, since 2025-08-01)
-    ///   (https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025)
-    /// - GrønlandsBANKEN closing days (https://www.banken.gl/da/kontakt/)
+    /// Greenland has no statutory list of days off. Church holidays (folkekirkens helligdage) are holidays by older
+    /// Danish law and days off through the collective agreements, other days off are set by agreements and circulars
+    /// (Naalakkersuisut, svarnotat FM2024/57 1. and 2. behandling).
+    ///
+    /// Sources used for the expected values:
+    /// [A] Hjemmestyrets bekendtgørelse nr. 26 af 11. november 2008 om flagdage
+    ///     https://nalunaarutit.gl/arkiv/gh.gl-love/dk/2008/bkg/bkg_nr_26-2008_dk.htm
+    /// [B] Selvstyrets bekendtgørelse nr. 55 af 11. juli 2025 om flagdage, Annex 1 (since 2025-08-01)
+    ///     https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025
+    /// [C] Naalakkersuisut, svarnotat FM2024/57, 1. behandling (16.04.2024): "befolkningen fri på folkekirkens helligdage,
+    ///     fordi det reguleres gennem overenskomsterne"
+    ///     https://ina.gl/media/fbqmf3c5/pkt57_fm2024_bf33_solhvervsdagen_sn_1beh_da.pdf
+    /// [D] Naalakkersuisut, svarnotat FM2024/57, 2. behandling (06.05.2024): "Store Bededag fortsat vil være en helligdag"
+    ///     https://inatsisartut.gl/media/wdzbt3hn/pkt57_fm2024_bf33_solhvervsdagen_sn_2beh_da.pdf
+    /// [E] Lov nr. 214 af 6. marts 2023, § 8: "Loven gælder ikke for Færøerne og Grønland."
+    ///     https://www.retsinformation.dk/eli/lta/2023/214
+    /// [F] Naalakkersuisut, § 37-svar 202/2020: National Day is a full day off (søgnehelligdag) under Cirkulære nr. 3/92
+    ///     https://ina.gl/media/uj4ht2t2/202_2020_officiel_maerkedag_ppol_svar.pdf
+    /// [G] Medarbejder- og Kompetencestyrelsen, Medst.nr. 004-26 (03.02.2026): "helligtrekongersdag som en halv
+    ///     søgnehelligdag" for state employees in Greenland
+    ///     https://cirkulaere.medst.dk/media/d4qjfqnj/004-26.pdf
+    /// [H] GrønlandsBANKEN closing days: Friday after Ascension Day, Store Bededag, 21 June, 24 December, 31 December
+    ///     https://www.banken.gl/da/kontakt/
+    ///
     /// Easter dates are calculated independently with the Gregorian computus.
     /// </summary>
     [TestClass]
@@ -50,6 +68,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 1, 1)]
         public void TestNewYearsDay(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "NEWYEARSDAY-01", observedYear, month, day);
         }
 
@@ -83,6 +102,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 1, 6)]
         public void TestEpiphany(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], half day off for state employees [G]
             this.AssertObservedDate(year, "EPIPHANY-01", observedYear, month, day);
         }
 
@@ -116,6 +136,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 6, 21)]
         public void TestNationalDay(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], full day off [F], bank closing day [H]
             this.AssertObservedDate(year, "ULLORTUNEQ-01", observedYear, month, day);
         }
 
@@ -149,6 +170,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 12, 24)]
         public void TestChristmasEve(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], bank closing day [H]
             this.AssertObservedDate(year, "CHRISTMASEVE-01", observedYear, month, day);
         }
 
@@ -182,6 +204,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 12, 25)]
         public void TestChristmasDay(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CHRISTMASDAY-01", observedYear, month, day);
         }
 
@@ -215,6 +238,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 12, 26)]
         public void TestStStephensDay(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "STSTEPHENSDAY-01", observedYear, month, day);
         }
 
@@ -248,6 +272,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 12, 31)]
         public void TestNewYearsEve(int year, int observedYear, int month, int day)
         {
+            //Flag day [B], bank closing day [H]
             this.AssertObservedDate(year, "NEWYEARSEVE-01", observedYear, month, day);
         }
 
@@ -285,6 +310,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 4, 6)]
         public void TestMaundyThursday(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CMAUNDYTHURSDAY-01", observedYear, month, day);
         }
 
@@ -318,6 +344,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 4, 7)]
         public void TestGoodFriday(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CGOODFRIDAY-01", observedYear, month, day);
         }
 
@@ -351,6 +378,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 4, 9)]
         public void TestEasterSunday(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CEASTERSUNDAY-01", observedYear, month, day);
         }
 
@@ -384,6 +412,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 4, 10)]
         public void TestEasterMonday(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CEASTERMONDAY-01", observedYear, month, day);
         }
 
@@ -418,6 +447,7 @@ namespace Nager.Date.UnitTest.Countries
         public void TestGeneralPrayerDay(int year, int observedYear, int month, int day)
         {
             //Fourth Friday after Easter (Store Bededag / Tussiarfissuaq)
+            //Church holiday [C][D], not abolished in Greenland [E], flag day since 2025 [B], bank closing day [H]
             this.AssertObservedDate(year, "GENERALPRAYERDAY-01", observedYear, month, day);
         }
 
@@ -451,6 +481,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 5, 18)]
         public void TestAscensionDay(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CASCENSIONDAY-01", observedYear, month, day);
         }
 
@@ -485,6 +516,7 @@ namespace Nager.Date.UnitTest.Countries
         public void TestBankClosingDay(int year, int observedYear, int month, int day)
         {
             //Friday after Ascension Day
+            //Bank closing day [H]
             this.AssertObservedDate(year, "BANKCLOSINGDAY-01", observedYear, month, day);
         }
 
@@ -518,6 +550,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 5, 28)]
         public void TestPentecost(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CPENTECOST-01", observedYear, month, day);
         }
 
@@ -551,6 +584,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034, 2034, 5, 29)]
         public void TestWhitMonday(int year, int observedYear, int month, int day)
         {
+            //Flag day [A][B], church holiday [C]
             this.AssertObservedDate(year, "CWHITMONDAY-01", observedYear, month, day);
         }
 
@@ -567,8 +601,8 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034)]
         public void TestEpiphanyIsAnObservanceOnly(int year)
         {
-            //6 January is only listed as an official flag day, it is not a day off
-            this.AssertHolidayTypes(year, "EPIPHANY-01", HolidayTypes.Observance);
+            //Flag day [A][B], half day off for state employees [G]; no church holiday [C] and no bank closing day [H]
+            this.AssertHolidayTypes(year, "EPIPHANY-01", HolidayTypes.Observance | HolidayTypes.Authorities);
         }
 
         [TestMethod]
@@ -577,7 +611,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow("NEWYEARSEVE-01")]
         public void TestBankClosingDaysAreBankHolidays(string holidayId)
         {
-            //GrønlandsBANKEN: closed on the Friday after Ascension Day, 24 December and 31 December
+            //Bank closing days [H], not church holidays [C]
             foreach (var year in new[] { 2008, 2025, 2026, 2027, 2034 })
             {
                 var holiday = HolidaySystem.GetHolidays(year, CountryCode.GL).Single(o => o.Id.EndsWith(holidayId));
@@ -621,6 +655,8 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2027, 12, 31, false)]
         public void ChecksIsPublicHoliday(int year, int month, int day, bool expectedIsPublicHoliday)
         {
+            //Church holidays [C][D] and National Day [F] are public holidays,
+            //6 January [G], Friday after Ascension Day, 24 and 31 December [H] are not
             var date = new DateTime(year, month, day);
             var isPublicHoliday = HolidaySystem.IsPublicHoliday(date, CountryCode.GL);
             Assert.AreEqual(expectedIsPublicHoliday, isPublicHoliday, date.ToString("yyyy-MM-dd"));
@@ -639,8 +675,9 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2034)]
         public void TestNationwidePublicHolidayCount(int year)
         {
-            //New Year's Day, Maundy Thursday, Good Friday, Easter Sunday, Easter Monday, General Prayer Day,
-            //Ascension Day, Whit Sunday, Whit Monday, National Day, Christmas Day, St. Stephen's Day
+            //11 church holidays [C][D] (New Year's Day, Maundy Thursday, Good Friday, Easter Sunday, Easter Monday,
+            //General Prayer Day, Ascension Day, Whit Sunday, Whit Monday, Christmas Day, St. Stephen's Day)
+            //plus National Day [F]
             var publicHolidays = HolidaySystem.GetHolidays(year, CountryCode.GL)
                 .Where(o => o.HolidayTypes.HasFlag(HolidayTypes.Public) && o.NationalHoliday)
                 .ToArray();
@@ -654,7 +691,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2026)]
         public void TestGeneralPrayerDayStillExistsAfterDanishAbolition(int year)
         {
-            //Denmark abolished Store Bededag from 2024, Greenland still lists it (Tussiarfissuaq) in the 2025 flag day regulation
+            //Denmark abolished Store Bededag from 2024, the law does not apply to Greenland [E] and it remains a holiday there [D]
             var holiday = HolidaySystem.GetHolidays(year, CountryCode.GL).Single(o => o.Id.EndsWith("GENERALPRAYERDAY-01"));
             Assert.IsTrue(holiday.HolidayTypes.HasFlag(HolidayTypes.Public));
         }
