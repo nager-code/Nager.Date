@@ -10,6 +10,7 @@ namespace Nager.Date.HolidayProviders
     /// South Korea HolidayProvider
     /// </summary>
     internal sealed class SouthKoreaHolidayProvider : AbstractHolidayProvider,
+        ISubdivisionCodesProvider,
         IObservedRuleSetHolidayProvider
     {
         /// <summary>
@@ -17,6 +18,31 @@ namespace Nager.Date.HolidayProviders
         /// </summary>
         public SouthKoreaHolidayProvider() : base(CountryCode.KR)
         {
+        }
+
+        /// <inheritdoc/>
+        public IDictionary<string, string> GetSubdivisionCodes()
+        {
+            return new Dictionary<string, string>
+            {
+                { "KR-11", "Seoul-teukbyeolsi" },
+                { "KR-26", "Busan-gwangyeoksi" },
+                { "KR-27", "Daegu-gwangyeoksi" },
+                { "KR-28", "Incheon-gwangyeoksi" },
+                { "KR-29", "Gwangju-gwangyeoksi" },
+                { "KR-30", "Daejeon-gwangyeoksi" },
+                { "KR-31", "Ulsan-gwangyeoksi" },
+                { "KR-41", "Gyeonggi-do" },
+                { "KR-43", "Chungcheongbuk-do" },
+                { "KR-44", "Chungcheongnam-do" },
+                { "KR-46", "Jeollanam-do" },
+                { "KR-47", "Gyeongsangbuk-do" },
+                { "KR-48", "Gyeongsangnam-do" },
+                { "KR-49", "Jeju-teukbyeoljachido" },
+                { "KR-50", "Sejong" },
+                { "KR-51", "Gangwon-teukbyeoljachido" },
+                { "KR-52", "Jeonbuk-teukbyeoljachido" },
+            };
         }
 
         /// <inheritdoc/>
@@ -78,8 +104,62 @@ namespace Nager.Date.HolidayProviders
             holidaySpecifications.AddIfNotNull(this.PresidentialElectionDay(year));
             holidaySpecifications.AddIfNotNull(this.NationalAssemblyElectionDay(year));
             holidaySpecifications.AddIfNotNull(this.LocalElectionDay(year));
+            holidaySpecifications.AddRangeIfNotNull(this.TemporaryPublicHolidays(year));
 
             return holidaySpecifications;
+        }
+
+        /// <summary>
+        /// Temporary public holidays (임시공휴일), designated individually by the government
+        /// </summary>
+        private HolidaySpecification[] TemporaryPublicHolidays(int year)
+        {
+            var items = year switch
+            {
+                //Cabinet decision 1980-10-10 (National Archives of Korea)
+                1980 => new[] { (Date: new DateTime(1980, 10, 22), EnglishName: "Constitutional Referendum Day", SubdivisionCodes: (string[]?)null) },
+                //Cabinet decision 1988-08-11 (National Archives of Korea)
+                1988 => [(new DateTime(1988, 9, 17), "Seoul Olympics Opening Day", null)],
+                //행정자치부공고 제2002-62호
+                2002 => [(new DateTime(2002, 7, 1), "FIFA World Cup Celebration Day", null)],
+                //Regional temporary public holidays, 행정자치부공고 제2005-122호 and 제2005-17호
+                2005 => [
+                    (new DateTime(2005, 7, 27), "Residents' Referendum Day", ["KR-49"]),
+                    (new DateTime(2005, 11, 18), "APEC Summit Day", ["KR-26"])
+                ],
+                //인사혁신처공고 제2015-358호
+                2015 => [(new DateTime(2015, 8, 14), "Temporary Public Holiday", null)],
+                //인사혁신처공고 제2016-218호
+                2016 => [(new DateTime(2016, 5, 6), "Temporary Public Holiday", null)],
+                //인사혁신처공고 제2017-299호
+                2017 => [(new DateTime(2017, 10, 2), "Temporary Public Holiday", null)],
+                //인사혁신처공고 제2020-378호
+                2020 => [(new DateTime(2020, 8, 17), "Temporary Public Holiday", null)],
+                //인사혁신처공고 제2023-400호
+                2023 => [(new DateTime(2023, 10, 2), "Temporary Public Holiday", null)],
+                //인사혁신처공고 제2024-309호
+                2024 => [(new DateTime(2024, 10, 1), "Armed Forces Day", null)],
+                //인사혁신처공고 제2025-28호
+                2025 => [(new DateTime(2025, 1, 27), "Temporary Public Holiday", null)],
+                _ => []
+            };
+
+            var holidaySpecifications = new List<HolidaySpecification>();
+
+            for (var i = 0; i < items.Length; i++)
+            {
+                holidaySpecifications.Add(new HolidaySpecification
+                {
+                    Id = $"TEMPORARYPUBLICHOLIDAY-{i + 1:00}",
+                    Date = items[i].Date,
+                    EnglishName = items[i].EnglishName,
+                    LocalName = "임시공휴일",
+                    HolidayTypes = HolidayTypes.Public,
+                    SubdivisionCodes = items[i].SubdivisionCodes,
+                });
+            }
+
+            return [.. holidaySpecifications];
         }
 
         // Election days
@@ -492,6 +572,15 @@ namespace Nager.Date.HolidayProviders
                 "https://info.nec.go.kr/main/main_previous_load.xhtml", //Election dates (2006-2025)
                 "https://www.korea.kr/news/policyNewsView.do?newsId=148830297", //Presidential Election Day, temporary public holiday (2017)
                 "https://www.korea.kr/news/policyNewsView.do?newsId=148941443", //Presidential Election Day, temporary public holiday (2025)
+                "https://theme.archives.go.kr/viewer/common/archWebViewer.do?singleData=Y&archiveEventId=0028757373", //Temporary public holiday, constitutional referendum (1980)
+                "https://theme.archives.go.kr/viewer/common/archWebViewer.do?singleData=Y&archiveEventId=0028780272", //Temporary public holiday, Seoul Olympics opening (1988)
+                "https://theme.archives.go.kr/next/chronology/yearRecord.do?year=2002&month=7&day=1", //Temporary public holiday, FIFA World Cup (2002)
+                "https://www.korea.kr/news/policyNewsView.do?newsId=148798912", //Temporary public holiday (2015)
+                "https://www.korea.kr/news/policyNewsView.do?newsId=148813106", //Temporary public holiday (2016)
+                "https://www.korea.kr/news/policyNewsView.do?newsId=148874895", //Temporary public holiday (2020)
+                "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156588468", //Temporary public holiday (2023)
+                "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156648653", //Temporary public holiday, Armed Forces Day (2024)
+                "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156670135", //Temporary public holiday (2025)
             ];
         }
     }

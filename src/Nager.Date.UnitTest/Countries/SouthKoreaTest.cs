@@ -150,5 +150,43 @@ namespace Nager.Date.UnitTest.Countries
         }
 
         #endregion
+
+        #region Temporary public holidays
+
+        [TestMethod]
+        [DataRow(1980, 1980, 10, 22)]
+        [DataRow(1988, 1988, 9, 17)]
+        [DataRow(2002, 2002, 7, 1)]
+        [DataRow(2015, 2015, 8, 14)]
+        [DataRow(2016, 2016, 5, 6)]
+        [DataRow(2017, 2017, 10, 2)]
+        [DataRow(2020, 2020, 8, 17)]
+        [DataRow(2023, 2023, 10, 2)]
+        [DataRow(2024, 2024, 10, 1)]
+        [DataRow(2025, 2025, 1, 27)]
+        public void TestNationwideTemporaryPublicHoliday(int year, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, "TEMPORARYPUBLICHOLIDAY-01", observedYear, month, day);
+        }
+
+        [TestMethod]
+        public void TestRegionalTemporaryPublicHolidays2005()
+        {
+            this.AssertObservedDate(2005, "TEMPORARYPUBLICHOLIDAY-01", 2005, 7, 27);
+            this.AssertSubdivisionCodes(2005, "TEMPORARYPUBLICHOLIDAY-01", "KR-49");
+
+            this.AssertObservedDate(2005, "TEMPORARYPUBLICHOLIDAY-02", 2005, 11, 18);
+            this.AssertSubdivisionCodes(2005, "TEMPORARYPUBLICHOLIDAY-02", "KR-26");
+        }
+
+        [TestMethod]
+        [DataRow(2019)]
+        [DataRow(2026)]
+        public void TestNoTemporaryPublicHoliday(int year)
+        {
+            this.AssertNoHoliday(year, "TEMPORARYPUBLICHOLIDAY-01");
+        }
+
+        #endregion
     }
 }
