@@ -7,32 +7,38 @@ using System.Linq;
 namespace Nager.Date.UnitTest.Countries
 {
     /// <summary>
+    /// Tests for the Greenland holiday provider (2008-2034).
+    /// Every expected value refers to one of the official sources [A]-[H] listed in the remarks.
+    /// </summary>
+    /// <remarks>
+    /// <para>
     /// Greenland has no statutory list of days off. Church holidays (folkekirkens helligdage) are holidays by older
     /// Danish law and days off through the collective agreements, other days off are set by agreements and circulars
     /// (Naalakkersuisut, svarnotat FM2024/57 1. and 2. behandling).
-    ///
-    /// Sources used for the expected values:
-    /// [A] Hjemmestyrets bekendtgørelse nr. 26 af 11. november 2008 om flagdage
-    ///     https://nalunaarutit.gl/arkiv/gh.gl-love/dk/2008/bkg/bkg_nr_26-2008_dk.htm
-    /// [B] Selvstyrets bekendtgørelse nr. 55 af 11. juli 2025 om flagdage, Annex 1 (since 2025-08-01)
-    ///     https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025
-    /// [C] Naalakkersuisut, svarnotat FM2024/57, 1. behandling (16.04.2024): "befolkningen fri på folkekirkens helligdage,
-    ///     fordi det reguleres gennem overenskomsterne"
-    ///     https://ina.gl/media/fbqmf3c5/pkt57_fm2024_bf33_solhvervsdagen_sn_1beh_da.pdf
-    /// [D] Naalakkersuisut, svarnotat FM2024/57, 2. behandling (06.05.2024): "Store Bededag fortsat vil være en helligdag"
-    ///     https://inatsisartut.gl/media/wdzbt3hn/pkt57_fm2024_bf33_solhvervsdagen_sn_2beh_da.pdf
-    /// [E] Lov nr. 214 af 6. marts 2023, § 8: "Loven gælder ikke for Færøerne og Grønland."
-    ///     https://www.retsinformation.dk/eli/lta/2023/214
-    /// [F] Naalakkersuisut, § 37-svar 202/2020: National Day is a full day off (søgnehelligdag) under Cirkulære nr. 3/92
-    ///     https://ina.gl/media/uj4ht2t2/202_2020_officiel_maerkedag_ppol_svar.pdf
-    /// [G] Medarbejder- og Kompetencestyrelsen, Medst.nr. 004-26 (03.02.2026): "helligtrekongersdag som en halv
-    ///     søgnehelligdag" for state employees in Greenland
-    ///     https://cirkulaere.medst.dk/media/d4qjfqnj/004-26.pdf
-    /// [H] GrønlandsBANKEN closing days: Friday after Ascension Day, Store Bededag, 21 June, 24 December, 31 December
-    ///     https://www.banken.gl/da/kontakt/
-    ///
     /// Easter dates are calculated independently with the Gregorian computus.
-    /// </summary>
+    /// </para>
+    /// <para>Sources used for the expected values:</para>
+    /// <list type="bullet">
+    /// <item><description>[A] Hjemmestyrets bekendtgørelse nr. 26 af 11. november 2008 om flagdage
+    /// https://nalunaarutit.gl/arkiv/gh.gl-love/dk/2008/bkg/bkg_nr_26-2008_dk.htm</description></item>
+    /// <item><description>[B] Selvstyrets bekendtgørelse nr. 55 af 11. juli 2025 om flagdage, Annex 1 (since 2025-08-01)
+    /// https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025</description></item>
+    /// <item><description>[C] Naalakkersuisut, svarnotat FM2024/57, 1. behandling (16.04.2024): "befolkningen fri på folkekirkens helligdage,
+    /// fordi det reguleres gennem overenskomsterne"
+    /// https://ina.gl/media/fbqmf3c5/pkt57_fm2024_bf33_solhvervsdagen_sn_1beh_da.pdf</description></item>
+    /// <item><description>[D] Naalakkersuisut, svarnotat FM2024/57, 2. behandling (06.05.2024): "Store Bededag fortsat vil være en helligdag"
+    /// https://inatsisartut.gl/media/wdzbt3hn/pkt57_fm2024_bf33_solhvervsdagen_sn_2beh_da.pdf</description></item>
+    /// <item><description>[E] Lov nr. 214 af 6. marts 2023, § 8: "Loven gælder ikke for Færøerne og Grønland."
+    /// https://www.retsinformation.dk/eli/lta/2023/214</description></item>
+    /// <item><description>[F] Naalakkersuisut, § 37-svar 202/2020: National Day is a full day off (søgnehelligdag) under Cirkulære nr. 3/92
+    /// https://ina.gl/media/uj4ht2t2/202_2020_officiel_maerkedag_ppol_svar.pdf</description></item>
+    /// <item><description>[G] Medarbejder- og Kompetencestyrelsen, Medst.nr. 004-26 (03.02.2026): "helligtrekongersdag som en halv
+    /// søgnehelligdag" for state employees in Greenland
+    /// https://cirkulaere.medst.dk/media/d4qjfqnj/004-26.pdf</description></item>
+    /// <item><description>[H] GrønlandsBANKEN closing days: Friday after Ascension Day, Store Bededag, 21 June, 24 December, 31 December
+    /// https://www.banken.gl/da/kontakt/</description></item>
+    /// </list>
+    /// </remarks>
     [TestClass]
     public class GreenlandTest() : BaseTest(CountryCode.GL)
     {
