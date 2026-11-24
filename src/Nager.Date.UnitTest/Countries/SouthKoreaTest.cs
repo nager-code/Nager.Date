@@ -63,5 +63,40 @@ namespace Nager.Date.UnitTest.Countries
         }
 
         #endregion
+
+        #region Chuseok
+
+        [TestMethod]
+        [DataRow(2017, "CHUSEOK-01", 2017, 10, 4)] //Oct 3 is National Foundation Day
+        [DataRow(2017, "CHUSEOK-02", 2017, 10, 5)]
+        [DataRow(2017, "CHUSEOK-03", 2017, 10, 6)] //Substitute holiday (korea.kr, 10 day holiday from Sep 30 to Oct 9)
+        [DataRow(2025, "CHUSEOK-01", 2025, 10, 6)] //Oct 5 is a Sunday
+        [DataRow(2025, "CHUSEOK-02", 2025, 10, 7)]
+        [DataRow(2025, "CHUSEOK-03", 2025, 10, 8)] //Substitute holiday (KASI calendar 2025)
+        [DataRow(2028, "CHUSEOK-01", 2028, 10, 2)]
+        [DataRow(2028, "CHUSEOK-02", 2028, 10, 4)] //Oct 3 is National Foundation Day
+        [DataRow(2028, "CHUSEOK-03", 2028, 10, 5)] //Substitute holiday (KASI calendar 2028)
+        [DataRow(2036, "CHUSEOK-01", 2036, 10, 4)] //Oct 3 is National Foundation Day
+        [DataRow(2036, "CHUSEOK-02", 2036, 10, 6)] //Oct 5 is a Sunday
+        [DataRow(2036, "CHUSEOK-03", 2036, 10, 7)]
+        [DataRow(2039, "CHUSEOK-01", 2039, 10, 1)]
+        [DataRow(2039, "CHUSEOK-02", 2039, 10, 4)] //Oct 2 is a Sunday, Oct 3 is National Foundation Day
+        [DataRow(2039, "CHUSEOK-03", 2039, 10, 5)]
+        public void TestChuseok(int year, string holidayId, int observedYear, int month, int day)
+        {
+            this.AssertObservedDate(year, holidayId, observedYear, month, day);
+        }
+
+        [TestMethod]
+        [DataRow(2017)]
+        [DataRow(2028)]
+        [DataRow(2036)]
+        [DataRow(2039)]
+        public void TestNationalFoundationDayDuringChuseok(int year)
+        {
+            this.AssertObservedDate(year, "NATIONALFOUNDATIONDAY-01", year, 10, 3);
+        }
+
+        #endregion
     }
 }

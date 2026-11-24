@@ -294,10 +294,23 @@ namespace Nager.Date.HolidayProviders
 
                 var buddhaBday = koreanCalendar.ToDateTime(year, this.MoveMonth(4, leapMonth), 8, 0, 0, 0, 0);
 
-                var chuseok1 = koreanCalendar.ToDateTime(year, this.MoveMonth(8, leapMonth), 14, 0, 0, 0, 0); //Has substitute holiday
-                chuseok1 = chuseok1.Shift(saturday => saturday, sunday => sunday.AddDays(1));
-                var chuseok2 = chuseok1.AddDays(+1).Shift(saturday => saturday, sunday => sunday.AddDays(1));
-                var chuseok3 = chuseok2.AddDays(+1).Shift(saturday => saturday, sunday => sunday.AddDays(1));
+                //Regulation on Holidays of Government Offices, amendment of November 2013 (first applied in 2014):
+                //a Chuseok day that falls on another public holiday is substituted by the next non-holiday
+                //(e.g. 2017 and 2028, Chuseok on National Foundation Day)
+                DateTime GetChuseokDay(DateTime date)
+                {
+                    while (date.DayOfWeek == DayOfWeek.Sunday ||
+                        (year >= 2014 && solarPublicHolidayDates.Contains(date)))
+                    {
+                        date = date.AddDays(1);
+                    }
+
+                    return date;
+                }
+
+                var chuseok1 = GetChuseokDay(koreanCalendar.ToDateTime(year, this.MoveMonth(8, leapMonth), 14, 0, 0, 0, 0)); //Has substitute holiday
+                var chuseok2 = GetChuseokDay(chuseok1.AddDays(+1));
+                var chuseok3 = GetChuseokDay(chuseok2.AddDays(+1));
 
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -388,6 +401,9 @@ namespace Nager.Date.HolidayProviders
                 "https://www.law.go.kr/lsInfoP.do?lsiSeq=233829#0000",
                 "https://m.korea.kr/news/policyNewsView.do?newsId=148912746", //Substitute holiday for Buddha's Birthday and Christmas Day (2023)
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2025", //Substitute holiday for Buddha's Birthday on May 6 (2025)
+                "https://news.seoul.go.kr/gov/?p=61716", //Substitute holiday for Seollal, Chuseok and Children's Day (2013)
+                "https://m.korea.kr/news/issueQAView.do?newsId=148842064", //Chuseok holidays from September 30 to October 9 (2017)
+                "https://astro.kasi.re.kr/life/post/calendarData?year=2028", //Substitute holiday for Chuseok on October 5 (2028)
             ];
         }
     }
