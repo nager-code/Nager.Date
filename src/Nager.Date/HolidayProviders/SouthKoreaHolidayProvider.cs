@@ -417,34 +417,74 @@ namespace Nager.Date.HolidayProviders
         }
 
         /// <summary>
+        /// Gets the first day on or after the given date that is neither a Saturday, a Sunday nor one of the given holidays
+        /// </summary>
+        private DateTime GetNextNonHoliday(DateTime date, HashSet<DateTime> holidayDates)
+        {
+            while (date.DayOfWeek == DayOfWeek.Saturday ||
+                date.DayOfWeek == DayOfWeek.Sunday ||
+                holidayDates.Contains(date))
+            {
+                date = date.AddDays(1);
+            }
+
+            return date;
+        }
+
+        /// <summary>
+        /// Creates a rule set that applies the same rule on every day of the week
+        /// </summary>
+        private ObservedRuleSet GetObservedRuleSet(Func<DateTime, DateTime> getObservedDate)
+        {
+            return new ObservedRuleSet
+            {
+                Monday = getObservedDate,
+                Tuesday = getObservedDate,
+                Wednesday = getObservedDate,
+                Thursday = getObservedDate,
+                Friday = getObservedDate,
+                Saturday = getObservedDate,
+                Sunday = getObservedDate,
+            };
+        }
+
+        /// <summary>
         /// Substitute holiday: if the holiday falls on a Saturday, a Sunday or another public holiday,
         /// the first following day that is neither a weekend day nor a public holiday is a holiday
         /// </summary>
         private ObservedRuleSet GetSubstituteHolidayObservedRuleSet(HashSet<DateTime> otherHolidayDates)
         {
-            DateTime GetSubstituteDate(DateTime date)
+            return this.GetObservedRuleSet(date => this.GetNextNonHoliday(date, otherHolidayDates));
+        }
+
+        /// <summary>
+        /// Substitute holidays of a holiday period of consecutive days (Chuseok): every day that falls on a Sunday
+        /// or another public holiday is substituted by the first day after it that is neither a weekend day,
+        /// a public holiday, a day of the holiday period nor an already assigned substitute holiday
+        /// </summary>
+        /// <returns>The rule set for each given date, <see langword="null"/> if the day has no substitute holiday</returns>
+        private ObservedRuleSet?[] GetHolidayPeriodObservedRuleSets(DateTime[] dates, HashSet<DateTime> otherHolidayDates)
+        {
+            var holidayDates = new HashSet<DateTime>(otherHolidayDates);
+            holidayDates.UnionWith(dates);
+
+            var observedRuleSets = new ObservedRuleSet?[dates.Length];
+
+            for (var i = 0; i < dates.Length; i++)
             {
-                var substituteDate = date;
-                while (substituteDate.DayOfWeek == DayOfWeek.Saturday ||
-                    substituteDate.DayOfWeek == DayOfWeek.Sunday ||
-                    otherHolidayDates.Contains(substituteDate))
+                var date = dates[i];
+                if (date.DayOfWeek != DayOfWeek.Sunday && !otherHolidayDates.Contains(date))
                 {
-                    substituteDate = substituteDate.AddDays(1);
+                    continue;
                 }
 
-                return substituteDate;
+                var substituteDate = this.GetNextNonHoliday(date.AddDays(1), holidayDates);
+                holidayDates.Add(substituteDate);
+
+                observedRuleSets[i] = this.GetObservedRuleSet(_ => substituteDate);
             }
 
-            return new ObservedRuleSet
-            {
-                Monday = GetSubstituteDate,
-                Tuesday = GetSubstituteDate,
-                Wednesday = GetSubstituteDate,
-                Thursday = GetSubstituteDate,
-                Friday = GetSubstituteDate,
-                Saturday = GetSubstituteDate,
-                Sunday = GetSubstituteDate,
-            };
+            return observedRuleSets;
         }
 
         private HolidaySpecification[] GetKoreanLunisolarHolidays(int year, HashSet<DateTime> solarPublicHolidayDates)
@@ -464,23 +504,18 @@ namespace Nager.Date.HolidayProviders
 
                 var buddhaBday = koreanCalendar.ToDateTime(year, this.MoveMonth(4, leapMonth), 8, 0, 0, 0, 0);
 
+                var chuseok1 = koreanCalendar.ToDateTime(year, this.MoveMonth(8, leapMonth), 14, 0, 0, 0, 0);
+                var chuseok2 = chuseok1.AddDays(+1);
+                var chuseok3 = chuseok2.AddDays(+1);
+
+                //The dates stay on the days of the lunisolar calendar, a substitute holiday only changes the observed date.
+                //A Chuseok day on a Sunday is substituted by the next non-holiday.
                 //Regulation on Holidays of Government Offices, amendment of November 2013 (first applied in 2014):
-                //a Chuseok day that falls on another public holiday is substituted by the next non-holiday
+                //a Chuseok day that falls on another public holiday is substituted as well
                 //(e.g. 2017 and 2028, Chuseok on National Foundation Day)
-                DateTime GetChuseokDay(DateTime date)
-                {
-                    while (date.DayOfWeek == DayOfWeek.Sunday ||
-                        (year >= 2014 && solarPublicHolidayDates.Contains(date)))
-                    {
-                        date = date.AddDays(1);
-                    }
-
-                    return date;
-                }
-
-                var chuseok1 = GetChuseokDay(koreanCalendar.ToDateTime(year, this.MoveMonth(8, leapMonth), 14, 0, 0, 0, 0)); //Has substitute holiday
-                var chuseok2 = GetChuseokDay(chuseok1.AddDays(+1));
-                var chuseok3 = GetChuseokDay(chuseok2.AddDays(+1));
+                var chuseokObservedRuleSets = this.GetHolidayPeriodObservedRuleSets(
+                    [chuseok1, chuseok2, chuseok3],
+                    year >= 2014 ? solarPublicHolidayDates : new HashSet<DateTime>());
 
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -525,6 +560,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Chuseok",
                     LocalName = "추석",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = chuseokObservedRuleSets[0],
                 });
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -533,6 +569,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Chuseok",
                     LocalName = "추석",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = chuseokObservedRuleSets[1],
                 });
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -541,6 +578,7 @@ namespace Nager.Date.HolidayProviders
                     EnglishName = "Chuseok",
                     LocalName = "추석",
                     HolidayTypes = HolidayTypes.Public,
+                    ObservedRuleSet = chuseokObservedRuleSets[2],
                 });
             }
 
