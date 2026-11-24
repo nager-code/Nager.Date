@@ -98,6 +98,10 @@ namespace Nager.Date.HolidayProviders
             holidaySpecifications.AddIfNotNull(this.LiberationDay(year, weekendObservedRuleSet));
             holidaySpecifications.AddIfNotNull(this.NationalFoundationDay(year, weekendObservedRuleSet));
             holidaySpecifications.AddIfNotNull(this.HangulDay(year, weekendObservedRuleSet));
+
+            //Order matters: the substitute holidays of the lunisolar holidays depend on the dates of all
+            //solar calendar holidays, add every new solar calendar holiday above this line.
+            //Election days and temporary public holidays are added afterwards and are not considered.
             var solarPublicHolidayDates = this.GetPublicHolidayDates(holidaySpecifications);
             holidaySpecifications.AddRangeIfNotNull(this.GetKoreanLunisolarHolidays(year, solarPublicHolidayDates));
 
@@ -114,10 +118,12 @@ namespace Nager.Date.HolidayProviders
         /// </summary>
         private HolidaySpecification[] TemporaryPublicHolidays(int year)
         {
-            var items = year switch
+            //The position within a year defines the Id (TEMPORARYPUBLICHOLIDAY-01, -02, ...),
+            //only append new entries of a year at the end, otherwise the existing Ids change
+            (DateTime Date, string EnglishName, string[]? SubdivisionCodes)[] items = year switch
             {
                 //Cabinet decision 1980-10-10 (National Archives of Korea)
-                1980 => new[] { (Date: new DateTime(1980, 10, 22), EnglishName: "Constitutional Referendum Day", SubdivisionCodes: (string[]?)null) },
+                1980 => [(new DateTime(1980, 10, 22), "Constitutional Referendum Day", null)],
                 //Cabinet decision 1988-08-11 (National Archives of Korea)
                 1988 => [(new DateTime(1988, 9, 17), "Seoul Olympics Opening Day", null)],
                 //행정자치부공고 제2002-62호
