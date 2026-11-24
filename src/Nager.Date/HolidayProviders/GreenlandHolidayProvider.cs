@@ -37,6 +37,8 @@ namespace Nager.Date.HolidayProviders
                     LocalName = "Ukiortaaq",
                     HolidayTypes = HolidayTypes.Public,
                 },
+                // 6 January is only listed as a flag day (Ullut erfalasulisaarfissat), not as a day off
+                // Hjemmestyrets bekendtgørelse nr. 26 af 11.11.2008 and Selvstyrets bekendtgørelse nr. 55 af 11.07.2025 (Annex 1)
                 new HolidaySpecification
                 {
                     Id = "EPIPHANY-01",
@@ -119,7 +121,9 @@ namespace Nager.Date.HolidayProviders
             return
             [
                 "https://en.wikipedia.org/wiki/Public_holidays_in_Greenland",
-                "https://www.norden.org/da/info-norden/helligdage-i-groenland"
+                "https://www.norden.org/da/info-norden/helligdage-i-groenland",
+                "https://nalunaarutit.gl/groenlandsk-lovgivning/2008/bkg-26-2008", // Flag days, 2008-2025
+                "https://nalunaarutit.gl/Groenlandsk-lovgivning/2025/Selvstyrets-bekendtgoerelse-nr-55-af-11_07_2025" // Flag days, since 2025-08-01
             ];
         }
     }
