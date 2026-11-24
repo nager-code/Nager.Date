@@ -66,6 +66,35 @@ namespace Nager.Date.UnitTest.Countries
 
         #endregion
 
+        #region Seollal
+
+        [TestMethod]
+        [DataRow(2016, "LUNARNEWYEAR-03", 2, 7, 2, 10)] //Sunday, substitute holiday (KASI, holidays from Feb 7 to Feb 10)
+        [DataRow(2016, "LUNARNEWYEAR-01", 2, 8, 2, 8)]
+        [DataRow(2016, "LUNARNEWYEAR-02", 2, 9, 2, 9)]
+        [DataRow(2023, "LUNARNEWYEAR-03", 1, 21, 1, 21)] //Saturday, no substitute holiday
+        [DataRow(2023, "LUNARNEWYEAR-01", 1, 22, 1, 24)] //Sunday, substitute holiday (KASI calendar 2023)
+        [DataRow(2023, "LUNARNEWYEAR-02", 1, 23, 1, 23)]
+        [DataRow(2024, "LUNARNEWYEAR-03", 2, 9, 2, 9)]
+        [DataRow(2024, "LUNARNEWYEAR-01", 2, 10, 2, 10)] //Saturday, no substitute holiday
+        [DataRow(2024, "LUNARNEWYEAR-02", 2, 11, 2, 12)] //Sunday, substitute holiday (KASI calendar 2024)
+        [DataRow(2025, "LUNARNEWYEAR-03", 1, 28, 1, 28)]
+        [DataRow(2025, "LUNARNEWYEAR-01", 1, 29, 1, 29)]
+        [DataRow(2025, "LUNARNEWYEAR-02", 1, 30, 1, 30)]
+        [DataRow(2027, "LUNARNEWYEAR-03", 2, 6, 2, 6)] //Saturday, no substitute holiday
+        [DataRow(2027, "LUNARNEWYEAR-01", 2, 7, 2, 9)] //Sunday, substitute holiday (KASI calendar 2027)
+        [DataRow(2027, "LUNARNEWYEAR-02", 2, 8, 2, 8)]
+        [DataRow(2036, "LUNARNEWYEAR-03", 1, 27, 1, 30)] //Sunday, substituted by Wednesday
+        [DataRow(2036, "LUNARNEWYEAR-01", 1, 28, 1, 28)]
+        [DataRow(2036, "LUNARNEWYEAR-02", 1, 29, 1, 29)]
+        public void TestSeollal(int year, string holidayId, int month, int day, int observedMonth, int observedDay)
+        {
+            //LUNARNEWYEAR-03 is the day before Seollal, LUNARNEWYEAR-01 is Seollal, LUNARNEWYEAR-02 is the day after Seollal
+            this.AssertDateAndObservedDate(year, holidayId, month, day, observedMonth, observedDay);
+        }
+
+        #endregion
+
         #region Chuseok
 
         [TestMethod]
@@ -89,11 +118,7 @@ namespace Nager.Date.UnitTest.Countries
         [DataRow(2039, "CHUSEOK-03", 10, 3, 10, 5)] //Oct 3 is National Foundation Day, substituted by Wednesday
         public void TestChuseok(int year, string holidayId, int month, int day, int observedMonth, int observedDay)
         {
-            //The date is the day of the lunisolar calendar, a substitute holiday only changes the observed date
-            var holiday = HolidaySystem.GetHolidays(year, CountryCode.KR).Single(o => o.Id.EndsWith(holidayId));
-
-            Assert.AreEqual(new DateTime(year, month, day), holiday.Date);
-            Assert.AreEqual(new DateTime(year, observedMonth, observedDay), holiday.ObservedDate);
+            this.AssertDateAndObservedDate(year, holidayId, month, day, observedMonth, observedDay);
         }
 
         [TestMethod]
@@ -197,5 +222,14 @@ namespace Nager.Date.UnitTest.Countries
         }
 
         #endregion
+
+        private void AssertDateAndObservedDate(int year, string holidayId, int month, int day, int observedMonth, int observedDay)
+        {
+            //The date is the day of the lunisolar calendar, a substitute holiday only changes the observed date
+            var holiday = HolidaySystem.GetHolidays(year, CountryCode.KR).Single(o => o.Id.EndsWith(holidayId));
+
+            Assert.AreEqual(new DateTime(year, month, day), holiday.Date);
+            Assert.AreEqual(new DateTime(year, observedMonth, observedDay), holiday.ObservedDate);
+        }
     }
 }
