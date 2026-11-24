@@ -497,30 +497,8 @@ namespace Nager.Date.HolidayProviders
                 var leapMonth = koreanCalendar.GetLeapMonth(year);
 
                 var lunarNewYear1 = koreanCalendar.ToDateTime(year, this.MoveMonth(1, leapMonth), 1, 0, 0, 0, 0);
-                DateTime lunarNewYear2; //The day after Seollal
-                DateTime lunarNewYear3; //The day before Seollal
-                var lunarNewYearObservedRuleSets = new ObservedRuleSet?[3];
-
-                if (year >= 2014)
-                {
-                    //Regulation on Holidays of Government Offices, Art. 3 (added by Presidential Decree No. 24828 of
-                    //November 2013, first applied in 2014): a Seollal day on a Sunday or another public holiday is
-                    //substituted by the next non-holiday (e.g. 2016, the day before Seollal on Sunday Feb 7 ->
-                    //substitute holiday on Feb 10). The dates stay on the days of the lunisolar calendar,
-                    //a substitute holiday only changes the observed date.
-                    lunarNewYear2 = lunarNewYear1.AddDays(+1);
-                    lunarNewYear3 = lunarNewYear1.AddDays(-1);
-                    lunarNewYearObservedRuleSets = this.GetHolidayPeriodObservedRuleSets(
-                        [lunarNewYear3, lunarNewYear1, lunarNewYear2],
-                        solarPublicHolidayDates);
-                }
-                else
-                {
-                    //Previous calculation, the Seollal holidays before 2014 have not been reviewed yet
-                    lunarNewYear1 = lunarNewYear1.Shift(saturday => saturday, sunday => sunday.AddDays(1));
-                    lunarNewYear2 = lunarNewYear1.AddDays(+1).Shift(saturday => saturday, sunday => sunday.AddDays(1));
-                    lunarNewYear3 = lunarNewYear1.AddDays(-1).Shift(saturday => saturday, sunday => sunday.AddDays(-1));
-                }
+                var lunarNewYear2 = lunarNewYear1.AddDays(+1); //The day after Seollal
+                var lunarNewYear3 = lunarNewYear1.AddDays(-1); //The day before Seollal
 
                 var buddhaBday = koreanCalendar.ToDateTime(year, this.MoveMonth(4, leapMonth), 8, 0, 0, 0, 0);
 
@@ -529,13 +507,25 @@ namespace Nager.Date.HolidayProviders
                 var chuseok3 = chuseok2.AddDays(+1);
 
                 //The dates stay on the days of the lunisolar calendar, a substitute holiday only changes the observed date.
-                //A Chuseok day on a Sunday is substituted by the next non-holiday.
-                //Regulation on Holidays of Government Offices, amendment of November 2013 (first applied in 2014):
-                //a Chuseok day that falls on another public holiday is substituted as well
-                //(e.g. 2017 and 2028, Chuseok on National Foundation Day)
-                var chuseokObservedRuleSets = this.GetHolidayPeriodObservedRuleSets(
-                    [chuseok1, chuseok2, chuseok3],
-                    year >= 2014 ? solarPublicHolidayDates : new HashSet<DateTime>());
+                //Regulation on Holidays of Government Offices, Art. 3 (added by Presidential Decree No. 24828 of
+                //November 2013, first applied in 2014): a Seollal or Chuseok day on a Sunday or another public holiday
+                //is substituted by the next non-holiday (e.g. 2016, the day before Seollal on Sunday Feb 7 ->
+                //substitute holiday on Feb 10, 2017 and 2028, Chuseok on National Foundation Day).
+                //Before 2014 there was no substitute holiday for Seollal and Chuseok, the next-day rule of 1989 and 1990
+                //(Presidential Decree No. 12616) did not apply to the holiday periods (연휴외의 공휴일).
+                var lunarNewYearObservedRuleSets = new ObservedRuleSet?[3];
+                var chuseokObservedRuleSets = new ObservedRuleSet?[3];
+
+                if (year >= 2014)
+                {
+                    lunarNewYearObservedRuleSets = this.GetHolidayPeriodObservedRuleSets(
+                        [lunarNewYear3, lunarNewYear1, lunarNewYear2],
+                        solarPublicHolidayDates);
+
+                    chuseokObservedRuleSets = this.GetHolidayPeriodObservedRuleSets(
+                        [chuseok1, chuseok2, chuseok3],
+                        solarPublicHolidayDates);
+                }
 
                 holidaySpecifications.Add(new HolidaySpecification
                 {
@@ -636,6 +626,8 @@ namespace Nager.Date.HolidayProviders
                 "https://m.korea.kr/news/issueQAView.do?newsId=148842064", //Chuseok holidays from September 30 to October 9 (2017)
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2028", //Substitute holiday for Chuseok on October 5 (2028)
                 "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=145846", //Substitute holiday for Seollal and Chuseok on a Sunday or another public holiday, Art. 3 (2013)
+                "https://www.law.go.kr/LSW/lsRvsRsnListP.do?lsId=002404&chrClsCd=010102", //Reasons of all amendments of the Regulation on Holidays of Government Offices (1985-2026)
+                "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=10406", //Next-day rule only for holidays outside of the holiday periods (1989-1990)
                 "https://www.kasi.re.kr/kor/publication/post/newsMaterial/2536", //Seollal holidays from February 7 to 10 including the substitute holiday (2016)
                 "https://astro.kasi.re.kr/life/post/calendarData?year=2027", //Substitute holiday for Seollal on February 9 (2027)
                 "https://www.law.go.kr/LSW/lsInfoR.do?lsiSeq=75972&efYd=20060906&chrClsCd=010202", //Election days of term-expiration elections are public holidays (2006)

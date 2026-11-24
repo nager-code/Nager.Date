@@ -69,6 +69,18 @@ namespace Nager.Date.UnitTest.Countries
         #region Seollal
 
         [TestMethod]
+        [DataRow(1990, "LUNARNEWYEAR-03", 1, 26, 1, 26)]
+        [DataRow(1990, "LUNARNEWYEAR-01", 1, 27, 1, 27)]
+        [DataRow(1990, "LUNARNEWYEAR-02", 1, 28, 1, 28)] //Sunday, the next-day rule of 1989 and 1990 did not apply to the holiday periods
+        [DataRow(2012, "LUNARNEWYEAR-03", 1, 22, 1, 22)] //Sunday, no substitute holiday before 2014
+        [DataRow(2012, "LUNARNEWYEAR-01", 1, 23, 1, 23)]
+        [DataRow(2012, "LUNARNEWYEAR-02", 1, 24, 1, 24)]
+        [DataRow(2013, "LUNARNEWYEAR-03", 2, 9, 2, 9)]
+        [DataRow(2013, "LUNARNEWYEAR-01", 2, 10, 2, 10)] //Sunday, no substitute holiday before 2014
+        [DataRow(2013, "LUNARNEWYEAR-02", 2, 11, 2, 11)]
+        [DataRow(2014, "LUNARNEWYEAR-03", 1, 30, 1, 30)]
+        [DataRow(2014, "LUNARNEWYEAR-01", 1, 31, 1, 31)]
+        [DataRow(2014, "LUNARNEWYEAR-02", 2, 1, 2, 1)] //Saturday, no substitute holiday
         [DataRow(2016, "LUNARNEWYEAR-03", 2, 7, 2, 10)] //Sunday, substitute holiday (KASI, holidays from Feb 7 to Feb 10)
         [DataRow(2016, "LUNARNEWYEAR-01", 2, 8, 2, 8)]
         [DataRow(2016, "LUNARNEWYEAR-02", 2, 9, 2, 9)]
@@ -98,6 +110,15 @@ namespace Nager.Date.UnitTest.Countries
         #region Chuseok
 
         [TestMethod]
+        [DataRow(2012, "CHUSEOK-01", 9, 29, 9, 29)]
+        [DataRow(2012, "CHUSEOK-02", 9, 30, 9, 30)] //Sunday, no substitute holiday before 2014
+        [DataRow(2012, "CHUSEOK-03", 10, 1, 10, 1)]
+        [DataRow(2013, "CHUSEOK-01", 9, 18, 9, 18)]
+        [DataRow(2013, "CHUSEOK-02", 9, 19, 9, 19)]
+        [DataRow(2013, "CHUSEOK-03", 9, 20, 9, 20)]
+        [DataRow(2014, "CHUSEOK-01", 9, 7, 9, 10)] //Sunday, first substitute holiday after the amendment of November 2013
+        [DataRow(2014, "CHUSEOK-02", 9, 8, 9, 8)]
+        [DataRow(2014, "CHUSEOK-03", 9, 9, 9, 9)]
         [DataRow(2017, "CHUSEOK-01", 10, 3, 10, 6)] //Oct 3 is National Foundation Day, substitute holiday (korea.kr, 10 day holiday from Sep 30 to Oct 9)
         [DataRow(2017, "CHUSEOK-02", 10, 4, 10, 4)]
         [DataRow(2017, "CHUSEOK-03", 10, 5, 10, 5)]
